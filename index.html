@@ -379,6 +379,47 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
   margin-bottom: 2px;
 }
 
+.mode-selector {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.mode-card {
+  background: var(--bg-card);
+  border: 2px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  padding: 24px 32px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.25s;
+  min-width: 200px;
+}
+.mode-card:hover { border-color: var(--accent-gold); }
+.mode-card.selected {
+  border-color: var(--accent-gold);
+  background: var(--accent-gold-dim);
+  box-shadow: 0 0 20px var(--accent-gold-dim);
+}
+.mode-card .mode-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  display: block;
+}
+.mode-card .mode-title {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.mode-card .mode-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 /* ══════════════════════════════════════════
    SCREEN: SETUP
    ══════════════════════════════════════════ */
@@ -1203,7 +1244,19 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
   <h1 class="welcome-title">LEGO</h1>
   <div class="welcome-title-sub">BUILDER</div>
   <p class="welcome-subtitle">Construir juntos. Resolver juntos. Llegar mas lejos.</p>
-  <div class="welcome-stats">
+  <div class="mode-selector">
+    <div class="mode-card selected" id="mode-two" onclick="setMode('two-teams')">
+      <span class="mode-icon">&#9876;&#65039;</span>
+      <div class="mode-title">2 EQUIPOS</div>
+      <div class="mode-desc">5 vs 5 — cada equipo arma su modelo</div>
+    </div>
+    <div class="mode-card" id="mode-all" onclick="setMode('all-together')">
+      <span class="mode-icon">&#9997;&#65039;</span>
+      <div class="mode-title">TODOS JUNTOS</div>
+      <div class="mode-desc">10 participantes — un solo modelo</div>
+    </div>
+  </div>
+  <div class="welcome-stats" id="welcome-stats">
     <div class="welcome-stat"><strong>2</strong>Equipos</div>
     <div class="welcome-stat"><strong>5</strong>Integrantes</div>
     <div class="welcome-stat"><strong>2</strong>Modelos F1</div>
@@ -1247,37 +1300,8 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
         <div class="inst-tip">Cuando termines, da clic en "Iniciar actividad". Esto guarda los datos y avanza al briefing.</div>
       </div>
     </details>
-    <div class="setup-grid">
-      <!-- TEAM 1 -->
-      <div class="card card-team1 setup-card">
-        <div class="flex-between">
-          <span class="badge badge-team1">Equipo 1</span>
-        </div>
-        <div class="model-name">Oracle Red Bull Racing RB20 F1 &middot; LEGO Technic #42206</div>
-        <div class="fields">
-          <input type="text" class="team-name-input" id="t1-name" placeholder="Nombre del equipo" style="border-color: var(--team-1);">
-          <input type="text" id="t1-m1" placeholder="Integrante 1">
-          <input type="text" id="t1-m2" placeholder="Integrante 2">
-          <input type="text" id="t1-m3" placeholder="Integrante 3">
-          <input type="text" id="t1-m4" placeholder="Integrante 4">
-          <input type="text" id="t1-m5" placeholder="Integrante 5">
-        </div>
-      </div>
-      <!-- TEAM 2 -->
-      <div class="card card-team2 setup-card">
-        <div class="flex-between">
-          <span class="badge badge-team2">Equipo 2</span>
-        </div>
-        <div class="model-name">Ferrari SF-24 F1 &middot; LEGO Technic #42207</div>
-        <div class="fields">
-          <input type="text" class="team-name-input" id="t2-name" placeholder="Nombre del equipo" style="border-color: var(--team-2);">
-          <input type="text" id="t2-m1" placeholder="Integrante 1">
-          <input type="text" id="t2-m2" placeholder="Integrante 2">
-          <input type="text" id="t2-m3" placeholder="Integrante 3">
-          <input type="text" id="t2-m4" placeholder="Integrante 4">
-          <input type="text" id="t2-m5" placeholder="Integrante 5">
-        </div>
-      </div>
+    <div id="setup-content">
+      <!-- Rendered by JS based on mode -->
     </div>
     <div class="text-center">
       <button class="btn btn-gold btn-lg" onclick="saveTeams()">INICIAR ACTIVIDAD</button>
@@ -1311,13 +1335,13 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
     <div class="briefing-section">
       <h3>OBJETIVO</h3>
       <div class="card">
-        <p style="font-size: 1.05rem; line-height: 1.6;">Cada equipo construira un modelo de LEGO Technic de Formula 1 usando la app <strong>LEGO Builder</strong> en modo "Construye en compania". La app distribuye las instrucciones entre los integrantes — cada quien arma su seccion y al final las unen.</p>
+        <p id="briefing-objective" style="font-size: 1.05rem; line-height: 1.6;">Cada equipo construira un modelo de LEGO Technic de Formula 1 usando la app <strong>LEGO Builder</strong> en modo "Construye en compania". La app distribuye las instrucciones entre los integrantes — cada quien arma su seccion y al final las unen.</p>
       </div>
     </div>
 
     <div class="briefing-section">
       <h3>REGLAS</h3>
-      <ul class="rule-list">
+      <ul class="rule-list" id="briefing-rules">
         <li><strong>1.</strong> Cada equipo recibe su caja de LEGO sellada. No pueden abrirla hasta que comience la etapa de construccion.</li>
         <li><strong>2.</strong> Usaran la app LEGO Builder en modo "Construye en compania". El anfitrion escanea el QR del manual y comparte el codigo de 6 digitos.</li>
         <li><strong>3.</strong> La app reparte las instrucciones: cada quien arma una seccion diferente en su celular. Cuando terminas tu parte, la app te dice a quien darsela para el ensamble.</li>
@@ -1770,6 +1794,7 @@ const REFLECTION_QUESTIONS = [
 // ─── STATE ─────────────────────────────────────────
 let state = {
   currentScreen: 'welcome',
+  mode: 'two-teams',
   teams: [
     {
       name: '', members: ['','','','',''],
@@ -1814,6 +1839,107 @@ let rotationRemaining = 300;
 let rotationRunning = false;
 let rotationScope = 'both';
 
+// ─── MODE ──────────────────────────────────────────
+function getTeamCount() {
+  return state.mode === 'all-together' ? 1 : 2;
+}
+
+function getMemberCount() {
+  return state.mode === 'all-together' ? 10 : 5;
+}
+
+function setMode(mode) {
+  state.mode = mode;
+  document.getElementById('mode-two').classList.toggle('selected', mode === 'two-teams');
+  document.getElementById('mode-all').classList.toggle('selected', mode === 'all-together');
+
+  // Update welcome stats
+  var statsEl = document.getElementById('welcome-stats');
+  if (mode === 'all-together') {
+    statsEl.innerHTML = '<div class="welcome-stat"><strong>1</strong>Equipo</div>' +
+      '<div class="welcome-stat"><strong>10</strong>Integrantes</div>' +
+      '<div class="welcome-stat"><strong>1</strong>Modelo F1</div>' +
+      '<div class="welcome-stat"><strong>&#9733;</strong>Retos sorpresa</div>';
+  } else {
+    statsEl.innerHTML = '<div class="welcome-stat"><strong>2</strong>Equipos</div>' +
+      '<div class="welcome-stat"><strong>5</strong>Integrantes</div>' +
+      '<div class="welcome-stat"><strong>2</strong>Modelos F1</div>' +
+      '<div class="welcome-stat"><strong>&#9733;</strong>Retos sorpresa</div>';
+  }
+  saveState();
+}
+
+function renderSetup() {
+  var container = document.getElementById('setup-content');
+  var html = '';
+
+  if (state.mode === 'all-together') {
+    html += '<div class="text-center mb-lg"><p class="text-muted">Selecciona el modelo que van a construir todos juntos.</p></div>';
+    html += '<div style="max-width:500px; margin:0 auto 24px;">';
+    html += '<div class="card" style="border-color: var(--accent-gold); border-width:2px;">';
+    html += '<div class="flex-between"><span class="badge badge-gold">Equipo Unico</span></div>';
+    html += '<div class="fields" style="margin-top:16px;">';
+    html += '<label class="field-label">Nombre del equipo</label>';
+    html += '<input type="text" class="team-name-input" id="t1-name" placeholder="Nombre del equipo" style="border-color: var(--accent-gold);">';
+    html += '<label class="field-label" style="margin-top:12px;">Modelo a construir</label>';
+    html += '<div style="display:flex; gap:8px;">';
+    html += '<button class="btn btn-surface" style="flex:1; font-size:0.75rem;" id="model-rb20" onclick="selectModel(0, \'#42206\')">RB20 (1,065 pzas)</button>';
+    html += '<button class="btn btn-surface" style="flex:1; font-size:0.75rem;" id="model-sf24" onclick="selectModel(0, \'#42207\')">SF-24 (1,362 pzas)</button>';
+    html += '</div>';
+    for (var i = 1; i <= 10; i++) {
+      html += '<input type="text" id="t1-m' + i + '" placeholder="Integrante ' + i + '">';
+    }
+    html += '</div></div></div>';
+  } else {
+    html += '<div class="setup-grid">';
+    // Team 1
+    html += '<div class="card card-team1 setup-card">';
+    html += '<div class="flex-between"><span class="badge badge-team1">Equipo 1</span></div>';
+    html += '<div class="model-name">Oracle Red Bull Racing RB20 F1 &middot; LEGO Technic #42206</div>';
+    html += '<div class="fields">';
+    html += '<input type="text" class="team-name-input" id="t1-name" placeholder="Nombre del equipo" style="border-color: var(--team-1);">';
+    for (var i = 1; i <= 5; i++) {
+      html += '<input type="text" id="t1-m' + i + '" placeholder="Integrante ' + i + '">';
+    }
+    html += '</div></div>';
+    // Team 2
+    html += '<div class="card card-team2 setup-card">';
+    html += '<div class="flex-between"><span class="badge badge-team2">Equipo 2</span></div>';
+    html += '<div class="model-name">Ferrari SF-24 F1 &middot; LEGO Technic #42207</div>';
+    html += '<div class="fields">';
+    html += '<input type="text" class="team-name-input" id="t2-name" placeholder="Nombre del equipo" style="border-color: var(--team-2);">';
+    for (var i = 1; i <= 5; i++) {
+      html += '<input type="text" id="t2-m' + i + '" placeholder="Integrante ' + i + '">';
+    }
+    html += '</div></div>';
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+  restoreTeamInputs();
+}
+
+function selectModel(teamIdx, modelNum) {
+  if (modelNum === '#42206') {
+    state.teams[teamIdx].model = 'Oracle Red Bull Racing RB20 F1';
+    state.teams[teamIdx].modelNum = '#42206';
+  } else {
+    state.teams[teamIdx].model = 'Ferrari SF-24 F1';
+    state.teams[teamIdx].modelNum = '#42207';
+  }
+  var rb = document.getElementById('model-rb20');
+  var sf = document.getElementById('model-sf24');
+  if (rb && sf) {
+    rb.className = 'btn ' + (modelNum === '#42206' ? 'btn-gold' : 'btn-surface') + ' ' ;
+    rb.style.flex = '1';
+    rb.style.fontSize = '0.75rem';
+    sf.className = 'btn ' + (modelNum === '#42207' ? 'btn-gold' : 'btn-surface') + ' ';
+    sf.style.flex = '1';
+    sf.style.fontSize = '0.75rem';
+  }
+  saveState();
+}
+
 function saveState() {
   try { localStorage.setItem('qlb_state', JSON.stringify(state)); } catch(e) {}
 }
@@ -1836,9 +1962,12 @@ function goToScreen(id) {
   if (screen) screen.classList.add('active');
   state.currentScreen = id;
 
+  if (id === 'setup') renderSetup();
+
   const showFac = ['construction','presentation','results'].includes(id);
   document.getElementById('fac-toggle').hidden = !showFac;
 
+  if (id === 'briefing') renderBriefing();
   if (id === 'construction') renderConstruction();
   if (id === 'strategy') renderStrategy();
   if (id === 'presentation') renderPresentation();
@@ -1850,28 +1979,91 @@ function goToScreen(id) {
 
 // ─── TEAMS ─────────────────────────────────────────
 function saveTeams() {
-  state.teams[0].name = document.getElementById('t1-name').value || 'Team Blue';
-  state.teams[1].name = document.getElementById('t2-name').value || 'Team Red';
-  for (let i = 0; i < 5; i++) {
-    state.teams[0].members[i] = document.getElementById('t1-m' + (i+1)).value || ('Integrante ' + (i+1));
-    state.teams[1].members[i] = document.getElementById('t2-m' + (i+1)).value || ('Integrante ' + (i+1));
+  var mc = getMemberCount();
+  var tc = getTeamCount();
+
+  state.teams[0].name = document.getElementById('t1-name').value || (tc === 1 ? 'Quantum Builders' : 'Team Blue');
+  if (tc === 2) {
+    state.teams[1].name = document.getElementById('t2-name').value || 'Team Red';
   }
+
+  for (var i = 0; i < mc; i++) {
+    var el = document.getElementById('t1-m' + (i+1));
+    state.teams[0].members[i] = el ? (el.value || ('Integrante ' + (i+1))) : ('Integrante ' + (i+1));
+  }
+  // Ensure members array is the right size
+  state.teams[0].members = state.teams[0].members.slice(0, mc);
+  state.teams[0].buildTurns = state.teams[0].buildTurns || [];
+  while (state.teams[0].buildTurns.length < mc) state.teams[0].buildTurns.push(0);
+
+  if (tc === 2) {
+    for (var i = 0; i < 5; i++) {
+      var el = document.getElementById('t2-m' + (i+1));
+      state.teams[1].members[i] = el ? (el.value || ('Integrante ' + (i+1))) : ('Integrante ' + (i+1));
+    }
+    state.teams[1].members = state.teams[1].members.slice(0, 5);
+    state.teams[1].buildTurns = state.teams[1].buildTurns || [];
+    while (state.teams[1].buildTurns.length < 5) state.teams[1].buildTurns.push(0);
+  }
+
   document.getElementById('fac-tab-name-0').textContent = state.teams[0].name;
-  document.getElementById('fac-tab-name-1').textContent = state.teams[1].name;
+  if (tc === 2) {
+    document.getElementById('fac-tab-name-1').textContent = state.teams[1].name;
+  }
   saveState();
   goToScreen('briefing');
 }
 
 function restoreTeamInputs() {
-  const t = state.teams;
-  if (t[0].name) document.getElementById('t1-name').value = t[0].name;
-  if (t[1].name) document.getElementById('t2-name').value = t[1].name;
-  for (let i = 0; i < 5; i++) {
-    if (t[0].members[i]) document.getElementById('t1-m'+(i+1)).value = t[0].members[i];
-    if (t[1].members[i]) document.getElementById('t2-m'+(i+1)).value = t[1].members[i];
+  var t = state.teams;
+  var mc = getMemberCount();
+  var tc = getTeamCount();
+
+  var el = document.getElementById('t1-name');
+  if (el && t[0].name) el.value = t[0].name;
+  for (var i = 0; i < mc; i++) {
+    var mel = document.getElementById('t1-m'+(i+1));
+    if (mel && t[0].members[i]) mel.value = t[0].members[i];
   }
-  document.getElementById('fac-tab-name-0').textContent = t[0].name || 'Equipo 1';
-  document.getElementById('fac-tab-name-1').textContent = t[1].name || 'Equipo 2';
+
+  if (tc === 2) {
+    var el2 = document.getElementById('t2-name');
+    if (el2 && t[1].name) el2.value = t[1].name;
+    for (var i = 0; i < 5; i++) {
+      var mel = document.getElementById('t2-m'+(i+1));
+      if (mel && t[1].members[i]) mel.value = t[1].members[i];
+    }
+  }
+
+  document.getElementById('fac-tab-name-0').textContent = t[0].name || (tc === 1 ? 'Equipo' : 'Equipo 1');
+  if (tc === 2) {
+    document.getElementById('fac-tab-name-1').textContent = t[1].name || 'Equipo 2';
+  }
+}
+
+// ─── BRIEFING ──────────────────────────────────────
+function renderBriefing() {
+  var objEl = document.getElementById('briefing-objective');
+  var rulesEl = document.getElementById('briefing-rules');
+  if (getTeamCount() === 1) {
+    objEl.innerHTML = 'El equipo construira un modelo de LEGO Technic de Formula 1 usando la app <strong>LEGO Builder</strong> en modo "Construye en compania". La app distribuye las instrucciones entre los integrantes — cada quien arma su seccion y al final las unen.';
+    rulesEl.innerHTML =
+      '<li><strong>1.</strong> El equipo recibe su caja de LEGO sellada. No pueden abrirla hasta que comience la etapa de construccion.</li>' +
+      '<li><strong>2.</strong> Usaran la app LEGO Builder en modo "Construye en compania". El anfitrion escanea el QR del manual y comparte el codigo de 6 digitos.</li>' +
+      '<li><strong>3.</strong> La app reparte las instrucciones: cada quien arma una seccion diferente en su celular. Cuando terminas tu parte, la app te dice a quien darsela para el ensamble.</li>' +
+      '<li><strong>4.</strong> Maximo 4 constructores simultaneos. Los demas apoyan, organizan piezas y se rotan con los constructores activos.</li>' +
+      '<li><strong>5.</strong> El facilitador activara retos sorpresa durante la construccion. Cada reto tiene reglas y tiempo.</li>' +
+      '<li><strong>6.</strong> Al terminar, el equipo presentara su experiencia respondiendo preguntas de reflexion.</li>';
+  } else {
+    objEl.innerHTML = 'Cada equipo construira un modelo de LEGO Technic de Formula 1 usando la app <strong>LEGO Builder</strong> en modo "Construye en compania". La app distribuye las instrucciones entre los integrantes — cada quien arma su seccion y al final las unen.';
+    rulesEl.innerHTML =
+      '<li><strong>1.</strong> Cada equipo recibe su caja de LEGO sellada. No pueden abrirla hasta que comience la etapa de construccion.</li>' +
+      '<li><strong>2.</strong> Usaran la app LEGO Builder en modo "Construye en compania". El anfitrion escanea el QR del manual y comparte el codigo de 6 digitos.</li>' +
+      '<li><strong>3.</strong> La app reparte las instrucciones: cada quien arma una seccion diferente en su celular. Cuando terminas tu parte, la app te dice a quien darsela para el ensamble.</li>' +
+      '<li><strong>4.</strong> Maximo 4 constructores simultaneos por equipo. El 5to integrante apoya, organiza piezas y se rota con los demas.</li>' +
+      '<li><strong>5.</strong> El facilitador activara retos sorpresa durante la construccion. Cada reto tiene reglas y tiempo.</li>' +
+      '<li><strong>6.</strong> Al terminar, cada equipo presentara su experiencia respondiendo preguntas de reflexion.</li>';
+  }
 }
 
 // ─── TIMER ─────────────────────────────────────────
@@ -1939,6 +2131,14 @@ function selectFacTeam(idx) {
 }
 
 function renderFacilitator() {
+  var teamTabsSection = document.querySelector('.fac-team-tabs').parentElement;
+  if (getTeamCount() === 1) {
+    teamTabsSection.style.display = 'none';
+    state.facSelectedTeam = 0;
+  } else {
+    teamTabsSection.style.display = '';
+  }
+
   const t = state.facSelectedTeam;
   const team = state.teams[t];
 
@@ -2152,7 +2352,7 @@ function updateRotationControls() {
 }
 
 function doAutoRotation() {
-  if (rotationScope === 'both') {
+  if (rotationScope === 'both' && getTeamCount() > 1) {
     nextBuilder(0);
     nextBuilder(1);
     var n0 = state.teams[0].members[state.teams[0].currentBuilder] || 'Integrante';
@@ -2207,18 +2407,21 @@ function setBuilder(teamIdx, memberIdx) {
 
 function renderStrategy() {
   const grid = document.getElementById('strategy-grid');
+  grid.style.gridTemplateColumns = getTeamCount() === 1 ? '1fr' : '1fr 1fr';
   let html = '';
-  for (let t = 0; t < 2; t++) {
+  for (let t = 0; t < getTeamCount(); t++) {
     const team = state.teams[t];
-    const colorClass = t === 0 ? 'card-team1' : 'card-team2';
-    const badgeClass = t === 0 ? 'badge-team1' : 'badge-team2';
+    const single = getTeamCount() === 1;
+    const colorClass = single ? '' : (t === 0 ? 'card-team1' : 'card-team2');
+    const badgeClass = single ? 'badge-gold' : (t === 0 ? 'badge-team1' : 'badge-team2');
+    const extraStyle = single ? 'border-color: var(--accent-gold); border-width:2px;' : '';
     const totalPieces = PIECE_COUNTS[team.modelNum] || 0;
     const memberCount = team.members.filter(m => m).length || 5;
     const perPerson = Math.round(totalPieces / memberCount);
 
-    html += `<div class="card ${colorClass}">
+    html += `<div class="card ${colorClass}" style="${extraStyle}">
       <div class="flex-between mb-md">
-        <span class="badge ${badgeClass}">${team.name || ('Equipo ' + (t+1))}</span>
+        <span class="badge ${badgeClass}">${team.name || (single ? 'Equipo' : ('Equipo ' + (t+1)))}</span>
         <span style="font-size:0.75rem; color:var(--text-muted);">${team.model}</span>
       </div>
       <div class="dist-section">
@@ -2269,20 +2472,22 @@ function renderConstruction() {
 
   // Team dashboards
   const grid = document.getElementById('race-grid');
+  grid.style.gridTemplateColumns = getTeamCount() === 1 ? '1fr' : '1fr 1fr';
   let html = '';
-  for (let t = 0; t < 2; t++) {
+  for (let t = 0; t < getTeamCount(); t++) {
     const team = state.teams[t];
-    const colorClass = t === 0 ? 'card-team1' : 'card-team2';
-    const fillClass = t === 0 ? 'fill-team1' : 'fill-team2';
-    const ptsClass = t === 0 ? 'points-team1' : 'points-team2';
-    const badgeClass = t === 0 ? 'badge-team1' : 'badge-team2';
+    const single = getTeamCount() === 1;
+    const colorClass = single ? '' : (t === 0 ? 'card-team1' : 'card-team2');
+    const fillClass = single ? 'fill-gold' : (t === 0 ? 'fill-team1' : 'fill-team2');
+    const badgeClass = single ? 'badge-gold' : (t === 0 ? 'badge-team1' : 'badge-team2');
+    const extraStyle = single ? 'border-color: var(--accent-gold); border-width:2px;' : '';
     const total = getTeamTotal(t);
     const chDone = team.challengesCompleted.length;
 
-    html += `<div class="card ${colorClass} team-dashboard">
+    html += `<div class="card ${colorClass} team-dashboard" style="${extraStyle}">
       <div class="team-dashboard-header">
         <div>
-          <div class="team-dashboard-name">${team.name || ('Equipo ' + (t+1))}</div>
+          <div class="team-dashboard-name">${team.name || (single ? 'Equipo' : ('Equipo ' + (t+1)))}</div>
           <div class="team-dashboard-model">${team.model} ${team.modelNum}</div>
         </div>
         <span class="badge ${badgeClass}">${team.progress === 100 ? 'TERMINADO' : 'Construyendo'}</span>
@@ -2319,13 +2524,15 @@ function renderConstruction() {
 function renderPresentation() {
   const container = document.getElementById('presentation-cards');
   let html = '';
-  for (let t = 0; t < 2; t++) {
+  for (let t = 0; t < getTeamCount(); t++) {
     const team = state.teams[t];
-    const colorClass = t === 0 ? 'card-team1' : 'card-team2';
-    const badgeClass = t === 0 ? 'badge-team1' : 'badge-team2';
-    html += `<div class="card ${colorClass} reflection-card">
+    const single = getTeamCount() === 1;
+    const colorClass = single ? '' : (t === 0 ? 'card-team1' : 'card-team2');
+    const badgeClass = single ? 'badge-gold' : (t === 0 ? 'badge-team1' : 'badge-team2');
+    const extraStyle = single ? 'border-color: var(--accent-gold); border-width:2px;' : '';
+    html += `<div class="card ${colorClass} reflection-card" style="${extraStyle}">
       <div class="flex-between">
-        <h3><span class="badge ${badgeClass}">${team.name || ('Equipo ' + (t+1))}</span></h3>
+        <h3><span class="badge ${badgeClass}">${team.name || (single ? 'Equipo' : ('Equipo ' + (t+1)))}</span></h3>
       </div>
       <div class="mt-md">`;
     REFLECTION_QUESTIONS.forEach((q, i) => {
@@ -2344,14 +2551,20 @@ function renderPresentation() {
 function renderResults() {
   if (state.timerRunning) pauseTimer();
 
+  const single = getTeamCount() === 1;
+
   const podium = document.getElementById('results-podium');
+  podium.style.gridTemplateColumns = single ? '1fr' : '1fr 1fr';
   let podiumHtml = '';
-  for (let t = 0; t < 2; t++) {
+  for (let t = 0; t < getTeamCount(); t++) {
     const team = state.teams[t];
-    const colorClass = t === 0 ? 'card-team1' : 'card-team2';
-    podiumHtml += `<div class="card ${colorClass} podium-card">
-      <span class="badge ${t===0 ? 'badge-team1' : 'badge-team2'}">${team.name || ('Equipo ' + (t+1))}</span>
-      <div class="total-score" style="color: ${t===0 ? 'var(--team-1-light)' : 'var(--team-2-light)'};">${team.progress}%</div>
+    const colorClass = single ? '' : (t === 0 ? 'card-team1' : 'card-team2');
+    const badgeClass = single ? 'badge-gold' : (t === 0 ? 'badge-team1' : 'badge-team2');
+    const extraStyle = single ? 'border-color: var(--accent-gold); border-width:2px;' : '';
+    const scoreColor = single ? 'var(--accent-gold-light)' : (t===0 ? 'var(--team-1-light)' : 'var(--team-2-light)');
+    podiumHtml += `<div class="card ${colorClass} podium-card" style="${extraStyle}">
+      <span class="badge ${badgeClass}">${team.name || (single ? 'Equipo' : ('Equipo ' + (t+1)))}</span>
+      <div class="total-score" style="color: ${scoreColor};">${team.progress}%</div>
       <div class="total-label">Progreso de construccion</div>
       <div class="mt-md" style="font-size:0.85rem; color:var(--text-muted);">
         ${team.model}<br>
@@ -2362,22 +2575,28 @@ function renderResults() {
   }
   podium.innerHTML = podiumHtml;
 
-  // Breakdown: progress + challenges comparison
-  const items = [
-    { label: 'Progreso', v1: state.teams[0].progress, v2: state.teams[1].progress, max: 100, unit: '%' },
-    { label: 'Retos', v1: state.teams[0].challengesCompleted.length, v2: state.teams[1].challengesCompleted.length, max: CHALLENGES.length, unit: '' }
-  ];
-  let breakdownHtml = '';
-  items.forEach(item => {
-    breakdownHtml += `<div class="breakdown-row">
-      <div class="breakdown-cat">${item.label}</div>
-      <div class="breakdown-bar"><div class="breakdown-bar-fill fill-team1" style="width: ${(item.v1/Math.max(item.max,1))*100}%;"></div></div>
-      <div class="breakdown-val" style="color:var(--team-1-light);">${item.v1}${item.unit}</div>
-      <div class="breakdown-bar"><div class="breakdown-bar-fill fill-team2" style="width: ${(item.v2/Math.max(item.max,1))*100}%;"></div></div>
-      <div class="breakdown-val" style="color:var(--team-2-light);">${item.v2}${item.unit}</div>
-    </div>`;
-  });
-  document.getElementById('breakdown-rows').innerHTML = breakdownHtml;
+  // Breakdown: only meaningful when comparing 2 teams
+  const breakdownEl = document.getElementById('results-breakdown');
+  if (single) {
+    breakdownEl.style.display = 'none';
+  } else {
+    breakdownEl.style.display = '';
+    const items = [
+      { label: 'Progreso', v1: state.teams[0].progress, v2: state.teams[1].progress, max: 100, unit: '%' },
+      { label: 'Retos', v1: state.teams[0].challengesCompleted.length, v2: state.teams[1].challengesCompleted.length, max: CHALLENGES.length, unit: '' }
+    ];
+    let breakdownHtml = '';
+    items.forEach(item => {
+      breakdownHtml += `<div class="breakdown-row">
+        <div class="breakdown-cat">${item.label}</div>
+        <div class="breakdown-bar"><div class="breakdown-bar-fill fill-team1" style="width: ${(item.v1/Math.max(item.max,1))*100}%;"></div></div>
+        <div class="breakdown-val" style="color:var(--team-1-light);">${item.v1}${item.unit}</div>
+        <div class="breakdown-bar"><div class="breakdown-bar-fill fill-team2" style="width: ${(item.v2/Math.max(item.max,1))*100}%;"></div></div>
+        <div class="breakdown-val" style="color:var(--team-2-light);">${item.v2}${item.unit}</div>
+      </div>`;
+    });
+    document.getElementById('breakdown-rows').innerHTML = breakdownHtml;
+  }
 }
 
 // ─── TOAST ─────────────────────────────────────────
@@ -2403,6 +2622,7 @@ function doReset() {
   rotationRunning = false; rotationRemaining = rotationSeconds;
   state = {
     currentScreen: 'welcome',
+    mode: 'two-teams',
     teams: [
       { name:'', members:['','','','',''], model:'Oracle Red Bull Racing RB20 F1', modelNum:'#42206', progress:0, scores:{communication:0,organization:0,participation:0,collaboration:0,adaptation:0,decisions:0,quality:0,time:0,bonus:0,challenges:0}, challengesCompleted:[], buildTurns:[0,0,0,0,0], currentBuilder:0, strategy:'', reflection:['','','','','',''], notes:'' },
       { name:'', members:['','','','',''], model:'Ferrari SF-24 F1', modelNum:'#42207', progress:0, scores:{communication:0,organization:0,participation:0,collaboration:0,adaptation:0,decisions:0,quality:0,time:0,bonus:0,challenges:0}, challengesCompleted:[], buildTurns:[0,0,0,0,0], currentBuilder:0, strategy:'', reflection:['','','','','',''], notes:'' }
@@ -2411,6 +2631,19 @@ function doReset() {
     activeChallenge:null, challengeCountdown:0, challengeRunning:false, challengeTargetTeam:'both', facSelectedTeam:0
   };
   document.getElementById('fac-panel').classList.remove('open');
+  var modeTwo = document.getElementById('mode-two');
+  var modeAll = document.getElementById('mode-all');
+  if (modeTwo && modeAll) {
+    modeTwo.classList.add('selected');
+    modeAll.classList.remove('selected');
+  }
+  var statsEl = document.getElementById('welcome-stats');
+  if (statsEl) {
+    statsEl.innerHTML = '<div class="welcome-stat"><strong>2</strong>Equipos</div>' +
+      '<div class="welcome-stat"><strong>5</strong>Integrantes</div>' +
+      '<div class="welcome-stat"><strong>2</strong>Modelos F1</div>' +
+      '<div class="welcome-stat"><strong>&#9733;</strong>Retos sorpresa</div>';
+  }
   goToScreen('welcome');
   updateTimerDisplay();
 }
@@ -2427,6 +2660,14 @@ window.addEventListener('message', function(e) {
 // ─── INIT ──────────────────────────────────────────
 function init() {
   loadState();
+
+  // Restore mode selector UI
+  if (state.mode) {
+    document.getElementById('mode-two').classList.toggle('selected', state.mode === 'two-teams');
+    document.getElementById('mode-all').classList.toggle('selected', state.mode === 'all-together');
+    setMode(state.mode);
+  }
+
   restoreTeamInputs();
 
   if (state.currentScreen && state.currentScreen !== 'welcome') {
