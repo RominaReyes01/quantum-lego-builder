@@ -1837,14 +1837,12 @@ const MODEL_SECTIONS = {
       { bags: 'Bolsa 8', pages: 'Pags. 257-370', pageCount: 114, desc: 'Carroceria, nariz y llantas' }
     ],
     sectionsLarge: [
-      { bags: 'Bolsas 1 y 2a', pages: 'Pags. 12-55', pageCount: 44, desc: 'Chasis base' },
-      { bags: 'Bolsa 2b', pages: 'Pags. 56-106', pageCount: 51, desc: 'Motor' },
-      { bags: 'Bolsa 4a', pages: 'Pags. 107-148', pageCount: 42, desc: 'Suspension delantera' },
-      { bags: 'Bolsa 4b', pages: 'Pags. 149-189', pageCount: 41, desc: 'Suspension trasera y estructura' },
+      { bags: 'Bolsa 1', pages: 'Pags. 12-31', pageCount: 20, desc: 'Chasis base' },
+      { bags: 'Bolsa 2', pages: 'Pags. 32-106', pageCount: 75, desc: 'Motor' },
+      { bags: 'Bolsa 4', pages: 'Pags. 107-189', pageCount: 83, desc: 'Suspension y estructura' },
       { bags: 'Bolsa 6', pages: 'Pags. 190-232', pageCount: 43, desc: 'Paneles laterales' },
-      { bags: 'Bolsas 7 y 8a', pages: 'Pags. 233-280', pageCount: 48, desc: 'Aleron y carroceria inicio' },
-      { bags: 'Bolsa 8b', pages: 'Pags. 281-325', pageCount: 45, desc: 'Carroceria media' },
-      { bags: 'Bolsa 8c', pages: 'Pags. 326-370', pageCount: 45, desc: 'Nariz y llantas' }
+      { bags: 'Bolsa 7', pages: 'Pags. 233-256', pageCount: 24, desc: 'Aleron trasero' },
+      { bags: 'Bolsa 8', pages: 'Pags. 257-370', pageCount: 114, desc: 'Carroceria, nariz y llantas' }
     ]
   },
   '#42207': {
@@ -1857,13 +1855,12 @@ const MODEL_SECTIONS = {
     ],
     sectionsLarge: [
       { bags: 'Bolsa 1', pages: 'Pags. 12-51', pageCount: 40, desc: 'Chasis base' },
-      { bags: 'Bolsas 2 y 3a', pages: 'Pags. 52-90', pageCount: 39, desc: 'Estructura y motor inicio' },
-      { bags: 'Bolsa 3b', pages: 'Pags. 91-135', pageCount: 45, desc: 'Motor' },
-      { bags: 'Bolsas 5 y 6a', pages: 'Pags. 136-175', pageCount: 40, desc: 'Suspension y paneles inicio' },
-      { bags: 'Bolsa 6b', pages: 'Pags. 176-207', pageCount: 32, desc: 'Paneles laterales' },
+      { bags: 'Bolsa 2', pages: 'Pags. 52-75', pageCount: 24, desc: 'Estructura' },
+      { bags: 'Bolsa 3', pages: 'Pags. 76-135', pageCount: 60, desc: 'Motor y transmision' },
+      { bags: 'Bolsa 5', pages: 'Pags. 136-167', pageCount: 32, desc: 'Suspension' },
+      { bags: 'Bolsa 6', pages: 'Pags. 168-207', pageCount: 40, desc: 'Paneles laterales' },
       { bags: 'Bolsa 7', pages: 'Pags. 208-235', pageCount: 28, desc: 'Aleron y detalles' },
-      { bags: 'Bolsa 8a', pages: 'Pags. 236-272', pageCount: 37, desc: 'Carroceria' },
-      { bags: 'Bolsa 8b', pages: 'Pags. 273-308', pageCount: 36, desc: 'Nariz y llantas' }
+      { bags: 'Bolsa 8', pages: 'Pags. 236-308', pageCount: 73, desc: 'Carroceria y llantas' }
     ]
   }
 };
@@ -2089,12 +2086,12 @@ function shuffleArray(arr) {
   return a;
 }
 
-function assignRoles(size) {
+function assignRoles(size, maxBuilders) {
   var idx = [];
   for (var i = 0; i < size; i++) idx.push(i);
   idx = shuffleArray(idx);
   var roles = new Array(size).fill('apoyo');
-  var constructorCount = size > 5 ? Math.min(8, size - 2) : Math.min(4, size);
+  var constructorCount = maxBuilders !== undefined ? Math.min(maxBuilders, size) : Math.min(4, size);
   for (var k = 0; k < constructorCount; k++) {
     roles[idx[k]] = (k === 0) ? 'coordinador' : 'constructor';
   }
@@ -2125,12 +2122,14 @@ function shuffleTeamsAndRoles() {
     state.teams[1].currentBuilder = 0;
   } else {
     state.teams[0].members = shuffled.slice(0, mc);
-    state.teams[0].roles = assignRoles(mc);
     if (Math.random() < 0.5) {
       state.teams[0].model = 'Oracle Red Bull Racing RB20 F1'; state.teams[0].modelNum = '#42206';
     } else {
       state.teams[0].model = 'Ferrari SF-24 F1'; state.teams[0].modelNum = '#42207';
     }
+    var sd = MODEL_SECTIONS[state.teams[0].modelNum];
+    var sects = (mc > 5 && sd && sd.sectionsLarge) ? sd.sectionsLarge : (sd ? sd.sections : []);
+    state.teams[0].roles = assignRoles(mc, sects.length);
   }
   state.teams[0].buildTurns = state.teams[0].members.map(function(){ return 0; });
   state.teams[0].currentBuilder = 0;
@@ -2636,13 +2635,14 @@ function renderSectionAssignment() {
   var html = '';
   for (var t = 0; t < getTeamCount(); t++) {
     var team = state.teams[t];
+    var sectionData = MODEL_SECTIONS[team.modelNum] || { label: 'Bolsa', sections: [] };
+    var sections = (team.members.length > 5 && sectionData.sectionsLarge) ? sectionData.sectionsLarge : (sectionData.sections || []);
     if (!team.roles || team.roles.length !== team.members.length) {
-      team.roles = assignRoles(team.members.length);
+      team.roles = assignRoles(team.members.length, sections.length);
     }
     var colorClass = single ? '' : (t === 0 ? 'card-team1' : 'card-team2');
     var badgeClass = single ? 'badge-gold' : (t === 0 ? 'badge-team1' : 'badge-team2');
     var extraStyle = single ? 'border-color: var(--accent-gold); border-width:2px;' : '';
-    var sectionData = MODEL_SECTIONS[team.modelNum] || { label: 'Bolsa', sections: [] };
 
     var constructorIdxs = [];
     var apoyoIdxs = [];
@@ -2654,8 +2654,6 @@ function renderSectionAssignment() {
     html += '<div class="flex-between mb-md"><span class="badge ' + badgeClass + '">' +
       (team.name || (single ? 'Equipo' : ('Equipo ' + (t+1)))) + '</span>' +
       '<span style="font-size:0.75rem; color:var(--text-muted);">' + team.model + '</span></div>';
-
-    var sections = (constructorIdxs.length > 4 && sectionData.sectionsLarge) ? sectionData.sectionsLarge : (sectionData.sections || []);
     constructorIdxs.forEach(function(idx, k) {
       var section = k < sections.length ? sections[k] : null;
       var tag = team.roles[idx] === 'coordinador' ? ' (Coordinador)' : ' (Constructor)';
