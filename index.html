@@ -1089,6 +1089,183 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
 .challenge-modal .ch-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
 /* ══════════════════════════════════════════
+   BUILDER DETAIL OVERLAY
+   ══════════════════════════════════════════ */
+.builder-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 350;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.builder-overlay.visible { display: flex; }
+.builder-detail {
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  max-width: 420px;
+  width: 100%;
+  overflow: hidden;
+  animation: builderSlideUp 0.35s ease;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+@keyframes builderSlideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.builder-detail-header {
+  padding: 28px 24px 20px;
+  text-align: center;
+  position: relative;
+  color: #fff;
+}
+.builder-detail-header .builder-number {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 900;
+  opacity: 0.25;
+  line-height: 1;
+}
+.builder-detail-header .builder-bag-label {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-top: -4px;
+}
+.builder-detail-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.builder-detail-close:hover { background: rgba(255,255,255,0.35); }
+.builder-detail-body {
+  padding: 24px;
+  text-align: center;
+}
+.builder-detail-name {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.builder-detail-role {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.builder-detail-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  font-style: italic;
+}
+.builder-detail-pages {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  margin-bottom: 20px;
+}
+.builder-detail-pagecount {
+  display: inline-block;
+  background: var(--bg-surface);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+.builder-detail-pdf {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  text-decoration: none;
+  border-radius: var(--radius-lg);
+  color: #fff;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.builder-detail-pdf:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.35); transform: translateY(-1px); }
+.builder-detail-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 12px;
+}
+
+/* Section cards - builder colors */
+.builder-section-card {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.builder-section-card:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.builder-section-card:active { transform: scale(0.98); }
+.builder-color-dot {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+}
+.builder-card-info { flex: 1; min-width: 0; }
+.builder-card-name {
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+}
+.builder-card-section {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+.builder-card-pages {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.builder-card-arrow {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════
    TOAST
    ══════════════════════════════════════════ */
 .toast-container {
@@ -1722,6 +1899,26 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
   </div>
 </div>
 
+<!-- BUILDER DETAIL OVERLAY -->
+<div class="builder-overlay" id="builder-overlay">
+  <div class="builder-detail" id="builder-detail">
+    <div class="builder-detail-header" id="builder-detail-header">
+      <button class="builder-detail-close" onclick="closeBuilderDetail()">&times;</button>
+      <div class="builder-number" id="bd-number"></div>
+      <div class="builder-bag-label" id="bd-bag-label"></div>
+    </div>
+    <div class="builder-detail-body">
+      <div class="builder-detail-name" id="bd-name"></div>
+      <div class="builder-detail-role" id="bd-role"></div>
+      <div class="builder-detail-desc" id="bd-desc"></div>
+      <div class="builder-detail-pages" id="bd-pages"></div>
+      <div class="builder-detail-pagecount" id="bd-pagecount"></div>
+      <a class="builder-detail-pdf" id="bd-pdf-link" href="#" target="_blank">VER MANUAL &#8599;</a>
+      <div class="builder-detail-hint">Se abrira el PDF oficial de LEGO en la pagina exacta</div>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST CONTAINER -->
 <div class="toast-container" id="toast-container"></div>
 
@@ -1826,6 +2023,17 @@ const SCORING_CATEGORIES = [
 ];
 
 const PIECE_COUNTS = { '#42206': 1065, '#42207': 1362 };
+
+const BUILDER_COLORS = [
+  { bg: '#0055BF', light: '#2979FF', dim: 'rgba(0,85,191,0.12)', name: 'Azul' },
+  { bg: '#00852B', light: '#00A63A', dim: 'rgba(0,133,43,0.12)', name: 'Verde' },
+  { bg: '#F26522', light: '#FF8A50', dim: 'rgba(242,101,34,0.12)', name: 'Naranja' },
+  { bg: '#6B2FA0', light: '#8B4FCF', dim: 'rgba(107,47,160,0.12)', name: 'Morado' },
+  { bg: '#E3000B', light: '#FF3D3D', dim: 'rgba(227,0,11,0.12)', name: 'Rojo' },
+  { bg: '#00838F', light: '#00ACC1', dim: 'rgba(0,131,143,0.12)', name: 'Teal' },
+  { bg: '#C870D9', light: '#DA8FE8', dim: 'rgba(200,112,217,0.12)', name: 'Rosa' },
+  { bg: '#B8860B', light: '#DAA520', dim: 'rgba(184,134,11,0.12)', name: 'Dorado' }
+];
 
 const MODEL_SECTIONS = {
   '#42206': {
@@ -2629,6 +2837,48 @@ function getTeamTotal(t) {
   return Object.values(s).reduce((a, b) => a + b, 0);
 }
 
+function openBuilderDetail(teamIdx, constructorK) {
+  var team = state.teams[teamIdx];
+  var sectionData = MODEL_SECTIONS[team.modelNum] || { label: 'Bolsa', sections: [] };
+  var sections = (team.members.length > 5 && sectionData.sectionsLarge) ? sectionData.sectionsLarge : (sectionData.sections || []);
+  var constructorIdxs = [];
+  team.members.forEach(function(m, i) {
+    if (team.roles[i] !== 'apoyo') constructorIdxs.push(i);
+  });
+  var idx = constructorIdxs[constructorK];
+  var section = constructorK < sections.length ? sections[constructorK] : null;
+  if (!section) return;
+  var color = BUILDER_COLORS[constructorK % BUILDER_COLORS.length];
+  var name = team.members[idx] || ('Integrante ' + (idx + 1));
+  var role = team.roles[idx] === 'coordinador' ? 'COORDINADOR' : 'CONSTRUCTOR';
+  var pdfUrl = (sectionData.pdfUrl || '');
+  var startPage = section.pages.match(/\d+/);
+  var pdfLink = (pdfUrl && startPage) ? (pdfUrl + '#page=' + startPage[0]) : '';
+
+  document.getElementById('builder-detail-header').style.background = 'linear-gradient(135deg, ' + color.bg + ', ' + color.light + ')';
+  document.getElementById('bd-number').textContent = constructorK + 1;
+  document.getElementById('bd-bag-label').textContent = section.bags.toUpperCase();
+  document.getElementById('bd-name').textContent = name;
+  document.getElementById('bd-role').textContent = role;
+  document.getElementById('bd-role').style.color = color.light;
+  document.getElementById('bd-desc').textContent = section.desc;
+  document.getElementById('bd-pages').textContent = section.pages;
+  document.getElementById('bd-pagecount').textContent = section.pageCount + ' paginas';
+  var pdfBtn = document.getElementById('bd-pdf-link');
+  if (pdfLink) {
+    pdfBtn.href = pdfLink;
+    pdfBtn.style.background = 'linear-gradient(135deg, ' + color.bg + ', ' + color.light + ')';
+    pdfBtn.style.display = 'block';
+  } else {
+    pdfBtn.style.display = 'none';
+  }
+  document.getElementById('builder-overlay').classList.add('visible');
+}
+
+function closeBuilderDetail() {
+  document.getElementById('builder-overlay').classList.remove('visible');
+}
+
 function renderSectionAssignment() {
   var container = document.getElementById('section-assignment-grid');
   if (!container) return;
@@ -2656,43 +2906,49 @@ function renderSectionAssignment() {
     html += '<div class="flex-between mb-md"><span class="badge ' + badgeClass + '">' +
       (team.name || (single ? 'Equipo' : ('Equipo ' + (t+1)))) + '</span>' +
       '<span style="font-size:0.75rem; color:var(--text-muted);">' + team.model + '</span></div>';
-    var pdfUrl = sectionData.pdfUrl || '';
+
+    html += '<div style="font-size:0.7rem; font-weight:600; letter-spacing:0.08em; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px;">CONSTRUCTORES</div>';
+
     constructorIdxs.forEach(function(idx, k) {
       var section = k < sections.length ? sections[k] : null;
-      var tag = team.roles[idx] === 'coordinador' ? ' (Coordinador)' : ' (Constructor)';
-      var name = team.members[idx] || ('Integrante ' + (idx+1));
+      var name = team.members[idx] || ('Integrante ' + (idx + 1));
+      var color = BUILDER_COLORS[k % BUILDER_COLORS.length];
       if (section) {
-        var pageInfo = section.pageCount ? (section.pageCount + ' pags.') : '';
-        var startPage = section.pages.match(/\d+/);
-        var pdfLink = (pdfUrl && startPage) ? (pdfUrl + '#page=' + startPage[0]) : '';
-        var pagesHtml = pdfLink
-          ? '<a href="' + pdfLink + '" target="_blank" style="font-size:0.78rem; color:var(--accent-gold); text-decoration:underline; white-space:nowrap; cursor:pointer;">' + section.pages + ' &#8599;</a>'
-          : '<span style="font-size:0.78rem; color:var(--text-secondary); white-space:nowrap;">' + section.pages + '</span>';
-        html += '<div style="padding:10px 0; border-bottom:1px solid var(--border-subtle);">' +
-          '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">' +
-          '<span style="font-weight:600; font-size:0.88rem;">' + name + tag + '</span>' +
-          (pageInfo ? '<span style="font-size:0.7rem; color:var(--text-muted); white-space:nowrap;">' + pageInfo + '</span>' : '') +
-          '</div>' +
-          '<div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">' +
-          '<span style="background:var(--accent-gold-dim); color:var(--accent-gold); font-size:0.72rem; font-weight:600; padding:2px 8px; border-radius:4px; white-space:nowrap;">' + section.bags + '</span>' +
-          pagesHtml +
-          '</div>' +
-          '<div style="font-size:0.75rem; color:var(--text-muted); font-style:italic; margin-top:3px;">' + section.desc + '</div>' +
-          '</div>';
+        html += '<div class="builder-section-card" style="background:' + color.dim + '; border-color:' + color.bg + '22;" onclick="openBuilderDetail(' + t + ',' + k + ')">';
+        html += '<div class="builder-color-dot" style="background:' + color.bg + ';">' + (k + 1) + '</div>';
+        html += '<div class="builder-card-info">';
+        html += '<div class="builder-card-name">' + name + '</div>';
+        html += '<div class="builder-card-section">';
+        html += '<span>' + section.bags + '</span>';
+        html += '<span class="builder-card-pages">' + section.pages + '</span>';
+        html += '</div></div>';
+        html += '<div class="builder-card-arrow">&#9654;</div>';
+        html += '</div>';
       } else {
-        html += '<div class="dist-member-row"><span class="dist-member-name">' + name + tag + '</span>' +
-          '<span class="dist-member-target">Seccion por asignar</span></div>';
+        html += '<div class="builder-section-card" style="background:' + color.dim + ';">';
+        html += '<div class="builder-color-dot" style="background:' + color.bg + ';">' + (k + 1) + '</div>';
+        html += '<div class="builder-card-info"><div class="builder-card-name">' + name + '</div>';
+        html += '<div class="builder-card-section">Seccion por asignar</div></div></div>';
       }
     });
-    apoyoIdxs.forEach(function(idx) {
-      html += '<div style="padding:10px 0; border-bottom:1px solid var(--border-subtle);">' +
-        '<div style="font-weight:600; font-size:0.88rem; margin-bottom:2px;">' +
-        (team.members[idx] || ('Integrante ' + (idx+1))) + ' (Apoyo)</div>' +
-        '<div style="font-size:0.75rem; color:var(--text-muted);">Organiza piezas, ayuda a quien necesite y rota cuando alguien termine su seccion</div></div>';
-    });
+
+    if (apoyoIdxs.length > 0) {
+      html += '<div style="font-size:0.7rem; font-weight:600; letter-spacing:0.08em; color:var(--text-muted); text-transform:uppercase; margin-top:14px; margin-bottom:8px;">APOYO</div>';
+      apoyoIdxs.forEach(function(idx) {
+        var name = team.members[idx] || ('Integrante ' + (idx + 1));
+        html += '<div style="padding:10px 14px; border-radius:var(--radius-md); background:var(--bg-surface); margin-bottom:6px; display:flex; align-items:center; gap:10px;">';
+        html += '<div style="width:32px; height:32px; border-radius:8px; background:var(--border-subtle); display:flex; align-items:center; justify-content:center; font-size:0.75rem; color:var(--text-muted);">&#9733;</div>';
+        html += '<div><div style="font-weight:600; font-size:0.85rem;">' + name + '</div>';
+        html += '<div style="font-size:0.72rem; color:var(--text-muted);">Organiza piezas y rota cuando alguien termine</div></div></div>';
+      });
+    }
     html += '</div>';
   }
   container.innerHTML = html;
+
+  document.getElementById('builder-overlay').onclick = function(e) {
+    if (e.target === this) closeBuilderDetail();
+  };
 }
 
 function renderConstruction() {
