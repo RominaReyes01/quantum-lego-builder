@@ -395,6 +395,52 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
 }
 
 /* ══════════════════════════════════════════
+   SCREEN: ROULETTE
+   ══════════════════════════════════════════ */
+.roulette-container { max-width: 800px; margin: 0 auto; width: 100%; }
+.roulette-teams-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.roulette-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.roulette-card {
+  background: var(--bg-card);
+  border: 2px solid var(--border-medium);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  min-width: 140px;
+  text-align: center;
+  transition: all 0.5s ease;
+}
+.roulette-card.team1 { border-color: var(--team-1); background: var(--team-1-bg); }
+.roulette-card.team2 { border-color: var(--team-2); background: var(--team-2-bg); }
+.roulette-card .role-badge {
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 4px;
+  display: inline-block; margin-top: 8px;
+  opacity: 0; transition: opacity 0.6s ease;
+}
+.roulette-card .role-badge.show { opacity: 1; }
+.roulette-card .role-badge.constructor { background: var(--team-1); color: white; }
+.roulette-card .role-badge.coordinador { background: var(--accent-gold); color: white; }
+.roulette-card .role-badge.apoyo { background: var(--warning); color: white; }
+
+@keyframes shuffleIn {
+  0% { transform: translateY(-20px) rotate(5deg); opacity: 0; }
+  100% { transform: translateY(0) rotate(0); opacity: 1; }
+}
+.roulette-card.animate { animation: shuffleIn 0.5s ease forwards; }
+
+@keyframes rouletteSpin {
+  0% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-8px) rotate(-4deg); }
+  50% { transform: translateY(4px) rotate(3deg); }
+  75% { transform: translateY(-4px) rotate(-2deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+.roulette-card.spin-card {
+  animation: rouletteSpin 0.6s ease-in-out infinite;
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════
    SCREEN: BRIEFING
    ══════════════════════════════════════════ */
 .briefing-container { max-width: 800px; width: 100%; }
@@ -1195,7 +1241,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
    ══════════════════════════════════════════ */
 @media (max-width: 768px) {
   .screen { padding: 16px; }
-  .setup-grid, .strategy-grid, .race-grid, .results-podium { grid-template-columns: 1fr; }
+  .setup-grid, .strategy-grid, .race-grid, .results-podium, .roulette-teams-grid { grid-template-columns: 1fr; }
   .scoring-grid { grid-template-columns: 1fr; }
   .breakdown-row { grid-template-columns: 100px 1fr 50px; gap: 8px; }
   .breakdown-row .breakdown-bar:nth-of-type(2),
@@ -1238,8 +1284,9 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
     <div class="inst-body">
       <ol>
         <li><strong>Elige la modalidad:</strong> Arriba selecciona si juegan en <strong>2 equipos</strong> (5 vs 5, cada uno con su modelo) o <strong>todos juntos</strong> (10 personas, un solo modelo).</li>
-        <li><strong>Registro:</strong> Escribe el nombre del equipo y los nombres de cada integrante. El orden importa: el integrante 1 sera el primer constructor.</li>
-        <li><strong>Briefing:</strong> Lee las reglas en voz alta. Asegurate de que todos tengan la <strong>app LEGO Builder</strong> instalada en su celular.</li>
+        <li><strong>Registro:</strong> Escribe los 10 nombres de los participantes, sin importar el orden ni el equipo.</li>
+        <li><strong>Sorteo:</strong> La app asigna al azar los equipos, los roles (coordinador, constructor, apoyo) y el modelo de cada equipo. Puedes repetir el sorteo si lo necesitas.</li>
+        <li><strong>Briefing:</strong> Lee las reglas en voz alta. Asegurate de tener el <strong>manual de instrucciones fisico</strong> del modelo.</li>
         <li><strong>Estrategia:</strong> Da 5 minutos para que discutan como se van a organizar.</li>
         <li><strong>Construccion:</strong> Inicia el timer. Abre tu <strong>panel de control</strong> con el boton de engranaje dorado (esquina inferior derecha). Desde ahi manejas el progreso, los retos y la rotacion de constructores.</li>
         <li><strong>Reflexion:</strong> Cada equipo responde las preguntas en voz alta. Tu puedes anotar lo que dicen.</li>
@@ -1258,9 +1305,9 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
   <div class="setup-container">
     <div class="text-center mb-lg">
       <button class="btn-back" onclick="goToScreen('welcome')">&larr; Cambiar modalidad</button>
-      <span class="badge badge-gold">Paso 1 de 6</span>
-      <h2 class="mt-md">Registro de equipos</h2>
-      <p class="text-muted mt-sm">El facilitador registra los equipos y sus integrantes.</p>
+      <span class="badge badge-gold">Paso 1 de 7</span>
+      <h2 class="mt-md">Registro de participantes</h2>
+      <p class="text-muted mt-sm">El facilitador registra a los 10 participantes. Los equipos y roles se sortearan en la siguiente pantalla.</p>
     </div>
     <details class="fac-instructions" open id="setup-instructions">
       <!-- Updated dynamically by renderSetupInstructions() -->
@@ -1269,7 +1316,39 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
       <!-- Rendered by JS based on mode -->
     </div>
     <div class="text-center">
-      <button class="btn btn-gold btn-lg" onclick="saveTeams()">INICIAR ACTIVIDAD</button>
+      <button class="btn btn-gold btn-lg" id="setup-submit-btn" onclick="saveParticipants()">SORTEAR EQUIPOS</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SCREEN: ROULETTE
+     ════════════════════════════════════════════════════════ -->
+<div id="screen-roulette" class="screen">
+  <div class="roulette-container">
+    <div class="text-center mb-lg">
+      <span class="badge badge-gold">Paso 2 de 7</span>
+      <h2 class="mt-md">Sorteo de equipos y roles</h2>
+      <p class="text-muted mt-sm">La app asigna al azar los equipos, los roles y el modelo que construira cada equipo.</p>
+    </div>
+    <details class="fac-instructions" open>
+      <summary>QUE HACER COMO FACILITADOR</summary>
+      <div class="inst-body">
+        <ul>
+          <li><strong>Proyecta esta pantalla</strong> para que todos vean el sorteo.</li>
+          <li>La animacion asigna automaticamente <strong>equipos, roles y modelo</strong> (Red Bull RB20 o Ferrari SF-24).</li>
+          <li>El <strong>Coordinador</strong> lidera al equipo y tambien es uno de los constructores.</li>
+          <li>Si quieres repetir la asignacion, usa <strong>"VOLVER A SORTEAR"</strong>.</li>
+        </ul>
+        <div class="inst-tip">Cuando el sorteo termine y todos vean su equipo y rol, avanza al briefing.</div>
+      </div>
+    </details>
+    <div id="roulette-content" class="roulette-grid">
+      <!-- Generated by JS -->
+    </div>
+    <div class="text-center mt-lg" style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-surface btn-lg" onclick="renderRoulette()">VOLVER A SORTEAR</button>
+      <button class="btn btn-gold btn-lg" onclick="goToScreen('briefing')">CONTINUAR AL BRIEFING</button>
     </div>
   </div>
 </div>
@@ -1280,7 +1359,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
 <div id="screen-briefing" class="screen">
   <div class="briefing-container">
     <div class="text-center mb-lg">
-      <span class="badge badge-gold">Paso 2 de 6</span>
+      <span class="badge badge-gold">Paso 3 de 7</span>
       <h2 class="mt-md">Briefing</h2>
       <p class="text-muted mt-sm">Antes de comenzar, estas son las reglas del juego.</p>
     </div>
@@ -1290,7 +1369,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
         <ul>
           <li><strong>Proyecta esta pantalla</strong> para que todos lean las reglas.</li>
           <li>Lee el objetivo y las reglas <strong>en voz alta</strong>.</li>
-          <li>Verifica que todos tengan la <strong>app LEGO Builder</strong> instalada en su celular.</li>
+          <li>Asegurate de tener el <strong>manual de instrucciones fisico</strong> del modelo.</li>
           <li>Entrega las <strong>cajas de LEGO selladas</strong> (no las abran todavia).</li>
         </ul>
         <div class="inst-tip">Cuando todos entiendan las reglas, avanza a "Estrategia" con el boton de abajo.</div>
@@ -1300,17 +1379,17 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
     <div class="briefing-section">
       <h3>OBJETIVO</h3>
       <div class="card">
-        <p id="briefing-objective" style="font-size: 1.05rem; line-height: 1.6;">Cada equipo construira un modelo de LEGO Technic de Formula 1 usando la app <strong>LEGO Builder</strong> en modo "Construye en compania". La app distribuye las instrucciones entre los integrantes — cada quien arma su seccion y al final las unen.</p>
+        <p id="briefing-objective" style="font-size: 1.05rem; line-height: 1.6;">Cada equipo construira un modelo de LEGO Technic de Formula 1 siguiendo el manual de instrucciones fisico. La app coordina quien construye cada seccion — cada quien arma su parte y al final las unen.</p>
       </div>
     </div>
 
     <div class="briefing-section">
       <h3>REGLAS</h3>
       <ul class="rule-list" id="briefing-rules">
-        <li><strong>1.</strong> Cada equipo recibe su caja de LEGO sellada. No pueden abrirla hasta que comience la etapa de construccion.</li>
-        <li><strong>2.</strong> Usaran la app LEGO Builder en modo "Construye en compania". El anfitrion escanea el QR del manual y comparte el codigo de 6 digitos.</li>
-        <li><strong>3.</strong> La app reparte las instrucciones: cada quien arma una seccion diferente en su celular. Cuando terminas tu parte, la app te dice a quien darsela para el ensamble.</li>
-        <li><strong>4.</strong> Maximo 4 constructores simultaneos por equipo. El 5to integrante apoya, organiza piezas y se rota con los demas.</li>
+        <li><strong>1.</strong> El equipo recibe su caja de LEGO sellada. No pueden abrirla hasta que comience la etapa de construccion.</li>
+        <li><strong>2.</strong> El manual de instrucciones se divide en secciones. La app asigna que seccion le toca a cada constructor.</li>
+        <li><strong>3.</strong> Cada constructor sigue las paginas del manual que le corresponden. Cuando termina su seccion, entrega las piezas armadas para el ensamble final.</li>
+        <li><strong>4.</strong> Maximo 4 constructores simultaneos por equipo. Los demas apoyan, organizan piezas y se rotan con los constructores activos.</li>
         <li><strong>5.</strong> El facilitador activara retos sorpresa durante la construccion. Cada reto tiene reglas y tiempo.</li>
         <li><strong>6.</strong> Al terminar, cada equipo presentara su experiencia respondiendo preguntas de reflexion.</li>
       </ul>
@@ -1346,7 +1425,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
 <div id="screen-strategy" class="screen">
   <div class="strategy-container">
     <div class="text-center mb-lg">
-      <span class="badge badge-gold">Paso 3 de 6</span>
+      <span class="badge badge-gold">Paso 4 de 7</span>
       <h2 class="mt-md">Estrategia de equipo</h2>
       <p class="text-muted mt-sm">Antes de construir, organicense. Tienen unos minutos para definir su estrategia.</p>
     </div>
@@ -1356,10 +1435,10 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
         <ul>
           <li>Da <strong>5 minutos</strong> para que cada equipo discuta las preguntas.</li>
           <li>No es necesario que escriban las respuestas — lo importante es que <strong>se pongan de acuerdo</strong>.</li>
-          <li>Mientras discuten, <strong>prepara la app LEGO Builder:</strong> un integrante de cada equipo escanea el QR del manual y comparte el codigo de 6 digitos.</li>
-          <li>Recuerdales: maximo 4 celulares por equipo. El 5to integrante <strong>apoya y se rota</strong>.</li>
+          <li>Mientras discuten, <strong>prepara los manuales de instrucciones:</strong> marca las secciones que le tocan a cada constructor.</li>
+          <li>Recuerdales: maximo 4 constructores por equipo. El 5to integrante <strong>apoya y se rota</strong>.</li>
         </ul>
-        <div class="inst-tip">Cuando los dos equipos esten listos y conectados en la app, avanza a "Construccion".</div>
+        <div class="inst-tip">Cuando los equipos esten listos, avanza a "Construccion".</div>
       </div>
     </details>
     <div class="card mb-lg" style="text-align: center;">
@@ -1403,6 +1482,14 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
       </div>
     </details>
 
+    <!-- SECTION ASSIGNMENT -->
+    <div class="mb-lg">
+      <div class="dist-title text-center" style="margin-bottom:12px;">ASIGNACION DE SECCIONES</div>
+      <div class="race-grid" id="section-assignment-grid">
+        <!-- Generated by JS -->
+      </div>
+    </div>
+
     <!-- TIMER -->
     <div class="construction-header">
       <div class="text-center">
@@ -1443,7 +1530,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
 <div id="screen-presentation" class="screen">
   <div class="presentation-container">
     <div class="text-center mb-lg">
-      <span class="badge badge-gold">Paso 5 de 6</span>
+      <span class="badge badge-gold">Paso 6 de 7</span>
       <h2 class="mt-md">Vuelta final</h2>
       <p class="text-muted mt-sm">Cada equipo reflexiona sobre su experiencia.</p>
     </div>
@@ -1740,6 +1827,11 @@ const SCORING_CATEGORIES = [
 
 const PIECE_COUNTS = { '#42206': 1065, '#42207': 1362 };
 
+const MODEL_SECTIONS = {
+  '#42206': { total: 8, label: 'Bolsa' },  // RB20
+  '#42207': { total: 10, label: 'Bolsa' }  // SF-24
+};
+
 const STRATEGY_QUESTIONS = [
   { q: '¿Como comunicaran dudas al equipo?', hint: 'Definan una forma rapida de pedir ayuda.' },
   { q: '¿Como resolveran errores o desacuerdos?', hint: 'Acuerden que hacer si algo no encaja.' },
@@ -1760,9 +1852,12 @@ const REFLECTION_QUESTIONS = [
 let state = {
   currentScreen: 'welcome',
   mode: 'two-teams',
+  participants: ['','','','','','','','','',''],
+  rouletteAssigned: false,
   teams: [
     {
       name: '', members: ['','','','',''],
+      roles: [],
       model: 'Oracle Red Bull Racing RB20 F1',
       modelNum: '#42206',
       progress: 0,
@@ -1775,6 +1870,7 @@ let state = {
     },
     {
       name: '', members: ['','','','',''],
+      roles: [],
       model: 'Ferrari SF-24 F1',
       modelNum: '#42207',
       progress: 0,
@@ -1838,51 +1934,20 @@ function renderSetup() {
   var container = document.getElementById('setup-content');
   var html = '';
 
-  if (state.mode === 'all-together') {
-    html += '<div class="text-center mb-lg"><p class="text-muted">Selecciona el modelo que van a construir todos juntos.</p></div>';
-    html += '<div style="max-width:500px; margin:0 auto 24px;">';
-    html += '<div class="card" style="border-color: var(--accent-gold); border-width:2px;">';
-    html += '<div class="flex-between"><span class="badge badge-gold">Equipo Unico</span></div>';
-    html += '<div class="fields" style="margin-top:16px;">';
-    html += '<label class="field-label">Nombre del equipo</label>';
-    html += '<input type="text" class="team-name-input" id="t1-name" placeholder="Nombre del equipo" style="border-color: var(--accent-gold);">';
-    html += '<label class="field-label" style="margin-top:12px;">Modelo a construir</label>';
-    html += '<div style="display:flex; gap:8px;">';
-    html += '<button class="btn btn-surface" style="flex:1; font-size:0.75rem;" id="model-rb20" onclick="selectModel(0, \'#42206\')">RB20 (1,065 pzas)</button>';
-    html += '<button class="btn btn-surface" style="flex:1; font-size:0.75rem;" id="model-sf24" onclick="selectModel(0, \'#42207\')">SF-24 (1,362 pzas)</button>';
-    html += '</div>';
-    for (var i = 1; i <= 10; i++) {
-      html += '<input type="text" id="t1-m' + i + '" placeholder="Integrante ' + i + '">';
-    }
-    html += '</div></div></div>';
-  } else {
-    html += '<div class="setup-grid">';
-    // Team 1
-    html += '<div class="card card-team1 setup-card">';
-    html += '<div class="flex-between"><span class="badge badge-team1">Equipo 1</span></div>';
-    html += '<div class="model-name">Oracle Red Bull Racing RB20 F1 &middot; LEGO Technic #42206</div>';
-    html += '<div class="fields">';
-    html += '<input type="text" class="team-name-input" id="t1-name" placeholder="Nombre del equipo" style="border-color: var(--team-1);">';
-    for (var i = 1; i <= 5; i++) {
-      html += '<input type="text" id="t1-m' + i + '" placeholder="Integrante ' + i + '">';
-    }
-    html += '</div></div>';
-    // Team 2
-    html += '<div class="card card-team2 setup-card">';
-    html += '<div class="flex-between"><span class="badge badge-team2">Equipo 2</span></div>';
-    html += '<div class="model-name">Ferrari SF-24 F1 &middot; LEGO Technic #42207</div>';
-    html += '<div class="fields">';
-    html += '<input type="text" class="team-name-input" id="t2-name" placeholder="Nombre del equipo" style="border-color: var(--team-2);">';
-    for (var i = 1; i <= 5; i++) {
-      html += '<input type="text" id="t2-m' + i + '" placeholder="Integrante ' + i + '">';
-    }
-    html += '</div></div>';
-    html += '</div>';
+  html += '<div style="max-width:520px; margin:0 auto 24px;">';
+  html += '<div class="card setup-card">';
+  html += '<div class="fields">';
+  for (var i = 1; i <= 10; i++) {
+    html += '<input type="text" id="p' + i + '" placeholder="Participante ' + i + '">';
   }
+  html += '</div></div></div>';
 
   container.innerHTML = html;
   renderSetupInstructions();
-  restoreTeamInputs();
+  restoreParticipantInputs();
+
+  var btn = document.getElementById('setup-submit-btn');
+  if (btn) btn.textContent = state.mode === 'all-together' ? 'SORTEAR ROLES' : 'SORTEAR EQUIPOS';
 }
 
 function renderSetupInstructions() {
@@ -1892,46 +1957,23 @@ function renderSetupInstructions() {
     el.innerHTML = '<summary>COMO LLENAR ESTA PANTALLA</summary>' +
       '<div class="inst-body">' +
       '<ul>' +
-      '<li>Escribe un <strong>nombre para el equipo</strong> (que ellos lo elijan).</li>' +
-      '<li>Selecciona el <strong>modelo a construir</strong>: Red Bull RB20 (1,065 piezas) o Ferrari SF-24 (1,362 piezas).</li>' +
-      '<li>Registra los <strong>10 nombres</strong> de los participantes. El orden importa: el integrante 1 sera el primer constructor.</li>' +
-      '<li>Recuerda: maximo <strong>4 constructores simultaneos</strong> en la app LEGO Builder. Los demas apoyan y se rotan.</li>' +
+      '<li>Registra los <strong>10 nombres</strong> de los participantes. El orden no importa.</li>' +
+      '<li>Los roles (coordinador, constructor, apoyo) y el modelo a construir se sortearan en la siguiente pantalla.</li>' +
+      '<li>Recuerda: maximo <strong>4 constructores simultaneos</strong>. Los demas apoyan y se rotan.</li>' +
       '</ul>' +
-      '<div class="inst-tip">Cuando termines, da clic en "Iniciar actividad". Esto guarda los datos y avanza al briefing.</div>' +
+      '<div class="inst-tip">Cuando termines, da clic en "SORTEAR ROLES" para asignar roles al azar.</div>' +
       '</div>';
   } else {
     el.innerHTML = '<summary>COMO LLENAR ESTA PANTALLA</summary>' +
       '<div class="inst-body">' +
       '<ul>' +
-      '<li>Escribe un <strong>nombre creativo</strong> para cada equipo (que ellos lo elijan).</li>' +
-      '<li>Registra los <strong>5 nombres</strong> de cada equipo. El orden importa: el integrante 1 sera el primer constructor.</li>' +
-      '<li>El <strong>Equipo 1</strong> armara el Red Bull RB20 (1,065 piezas) y el <strong>Equipo 2</strong> el Ferrari SF-24 (1,362 piezas).</li>' +
-      '<li>Recuerda: maximo <strong>4 constructores simultaneos</strong> por equipo. El 5to apoya y se rota.</li>' +
+      '<li>Registra los <strong>10 nombres</strong> de los participantes. El orden no importa.</li>' +
+      '<li>Los equipos, los roles (coordinador, constructor, apoyo) y el modelo de cada equipo se sortearan en la siguiente pantalla.</li>' +
+      '<li>Recuerda: maximo <strong>4 constructores simultaneos</strong> por equipo. Los demas apoyan y se rotan.</li>' +
       '</ul>' +
-      '<div class="inst-tip">Cuando termines, da clic en "Iniciar actividad". Esto guarda los datos y avanza al briefing.</div>' +
+      '<div class="inst-tip">Cuando termines, da clic en "SORTEAR EQUIPOS" para asignar equipos y roles al azar.</div>' +
       '</div>';
   }
-}
-
-function selectModel(teamIdx, modelNum) {
-  if (modelNum === '#42206') {
-    state.teams[teamIdx].model = 'Oracle Red Bull Racing RB20 F1';
-    state.teams[teamIdx].modelNum = '#42206';
-  } else {
-    state.teams[teamIdx].model = 'Ferrari SF-24 F1';
-    state.teams[teamIdx].modelNum = '#42207';
-  }
-  var rb = document.getElementById('model-rb20');
-  var sf = document.getElementById('model-sf24');
-  if (rb && sf) {
-    rb.className = 'btn ' + (modelNum === '#42206' ? 'btn-gold' : 'btn-surface') + ' ' ;
-    rb.style.flex = '1';
-    rb.style.fontSize = '0.75rem';
-    sf.className = 'btn ' + (modelNum === '#42207' ? 'btn-gold' : 'btn-surface') + ' ';
-    sf.style.flex = '1';
-    sf.style.fontSize = '0.75rem';
-  }
-  saveState();
 }
 
 function saveState() {
@@ -1957,6 +1999,7 @@ function goToScreen(id) {
   state.currentScreen = id;
 
   if (id === 'setup') renderSetup();
+  if (id === 'roulette') renderRoulette();
 
   const showFac = ['construction','presentation','results'].includes(id);
   document.getElementById('fac-toggle').hidden = !showFac;
@@ -1971,68 +2014,165 @@ function goToScreen(id) {
   window.scrollTo(0, 0);
 }
 
-// ─── TEAMS ─────────────────────────────────────────
-function saveTeams() {
-  var mc = getMemberCount();
-  var tc = getTeamCount();
-
-  state.teams[0].name = document.getElementById('t1-name').value || (tc === 1 ? 'Quantum Builders' : 'Team Blue');
-  if (tc === 2) {
-    state.teams[1].name = document.getElementById('t2-name').value || 'Team Red';
+// ─── PARTICIPANTS ──────────────────────────────────
+function saveParticipants() {
+  var arr = [];
+  for (var i = 1; i <= 10; i++) {
+    var el = document.getElementById('p' + i);
+    arr.push(el ? (el.value || ('Participante ' + i)) : ('Participante ' + i));
   }
-
-  for (var i = 0; i < mc; i++) {
-    var el = document.getElementById('t1-m' + (i+1));
-    state.teams[0].members[i] = el ? (el.value || ('Integrante ' + (i+1))) : ('Integrante ' + (i+1));
-  }
-  // Ensure members array is the right size
-  state.teams[0].members = state.teams[0].members.slice(0, mc);
-  state.teams[0].buildTurns = state.teams[0].buildTurns || [];
-  while (state.teams[0].buildTurns.length < mc) state.teams[0].buildTurns.push(0);
-
-  if (tc === 2) {
-    for (var i = 0; i < 5; i++) {
-      var el = document.getElementById('t2-m' + (i+1));
-      state.teams[1].members[i] = el ? (el.value || ('Integrante ' + (i+1))) : ('Integrante ' + (i+1));
-    }
-    state.teams[1].members = state.teams[1].members.slice(0, 5);
-    state.teams[1].buildTurns = state.teams[1].buildTurns || [];
-    while (state.teams[1].buildTurns.length < 5) state.teams[1].buildTurns.push(0);
-  }
-
-  document.getElementById('fac-tab-name-0').textContent = state.teams[0].name;
-  if (tc === 2) {
-    document.getElementById('fac-tab-name-1').textContent = state.teams[1].name;
-  }
+  state.participants = arr;
   saveState();
-  goToScreen('briefing');
+  goToScreen('roulette');
 }
 
-function restoreTeamInputs() {
-  var t = state.teams;
-  var mc = getMemberCount();
-  var tc = getTeamCount();
-
-  var el = document.getElementById('t1-name');
-  if (el && t[0].name) el.value = t[0].name;
-  for (var i = 0; i < mc; i++) {
-    var mel = document.getElementById('t1-m'+(i+1));
-    if (mel && t[0].members[i]) mel.value = t[0].members[i];
+function restoreParticipantInputs() {
+  if (!state.participants) return;
+  for (var i = 0; i < 10; i++) {
+    var el = document.getElementById('p' + (i+1));
+    if (el && state.participants[i]) el.value = state.participants[i];
   }
+}
+
+function updateFacTabNames() {
+  var tc = getTeamCount();
+  var t = state.teams;
+  var el0 = document.getElementById('fac-tab-name-0');
+  if (el0) el0.textContent = t[0].name || (tc === 1 ? 'Equipo' : 'Equipo 1');
+  var el1 = document.getElementById('fac-tab-name-1');
+  if (el1) el1.textContent = t[1].name || 'Equipo 2';
+}
+
+// ─── ROULETTE (sorteo de equipos y roles) ──────────
+function shuffleArray(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function assignRoles(size) {
+  var idx = [];
+  for (var i = 0; i < size; i++) idx.push(i);
+  idx = shuffleArray(idx);
+  var roles = new Array(size).fill('apoyo');
+  var constructorCount = Math.min(4, size);
+  for (var k = 0; k < constructorCount; k++) {
+    roles[idx[k]] = (k === 0) ? 'coordinador' : 'constructor';
+  }
+  return roles;
+}
+
+function shuffleTeamsAndRoles() {
+  var tc = getTeamCount();
+  var mc = getMemberCount();
+  var participants = (state.participants || []).slice(0, 10);
+  while (participants.length < 10) participants.push('Participante ' + (participants.length + 1));
+  var shuffled = shuffleArray(participants);
 
   if (tc === 2) {
-    var el2 = document.getElementById('t2-name');
-    if (el2 && t[1].name) el2.value = t[1].name;
-    for (var i = 0; i < 5; i++) {
-      var mel = document.getElementById('t2-m'+(i+1));
-      if (mel && t[1].members[i]) mel.value = t[1].members[i];
+    state.teams[0].members = shuffled.slice(0, 5);
+    state.teams[1].members = shuffled.slice(5, 10);
+    state.teams[0].roles = assignRoles(5);
+    state.teams[1].roles = assignRoles(5);
+
+    if (Math.random() < 0.5) {
+      state.teams[0].model = 'Oracle Red Bull Racing RB20 F1'; state.teams[0].modelNum = '#42206';
+      state.teams[1].model = 'Ferrari SF-24 F1'; state.teams[1].modelNum = '#42207';
+    } else {
+      state.teams[0].model = 'Ferrari SF-24 F1'; state.teams[0].modelNum = '#42207';
+      state.teams[1].model = 'Oracle Red Bull Racing RB20 F1'; state.teams[1].modelNum = '#42206';
+    }
+    state.teams[1].buildTurns = state.teams[1].members.map(function(){ return 0; });
+    state.teams[1].currentBuilder = 0;
+  } else {
+    state.teams[0].members = shuffled.slice(0, mc);
+    state.teams[0].roles = assignRoles(mc);
+    if (Math.random() < 0.5) {
+      state.teams[0].model = 'Oracle Red Bull Racing RB20 F1'; state.teams[0].modelNum = '#42206';
+    } else {
+      state.teams[0].model = 'Ferrari SF-24 F1'; state.teams[0].modelNum = '#42207';
     }
   }
+  state.teams[0].buildTurns = state.teams[0].members.map(function(){ return 0; });
+  state.teams[0].currentBuilder = 0;
 
-  document.getElementById('fac-tab-name-0').textContent = t[0].name || (tc === 1 ? 'Equipo' : 'Equipo 1');
+  state.rouletteAssigned = true;
+  updateFacTabNames();
+  saveState();
+}
+
+function roleLabel(role) {
+  if (role === 'coordinador') return 'Coordinador &#9733;';
+  if (role === 'constructor') return 'Constructor &#128295;';
+  return 'Apoyo &#128260;';
+}
+
+function renderRouletteTeamColumn(teamIdx, colorKey) {
+  var team = state.teams[teamIdx];
+  var badgeClass = colorKey === 'team1' ? 'badge-team1' : (colorKey === 'team2' ? 'badge-team2' : 'badge-gold');
+  var cardTeamClass = colorKey === 'team1' ? 'team1' : (colorKey === 'team2' ? 'team2' : '');
+  var html = '<div class="roulette-team-block">';
+  html += '<div class="text-center mb-md"><span class="badge ' + badgeClass + '">' +
+    (team.name || (getTeamCount() === 1 ? 'Equipo' : ('Equipo ' + (teamIdx+1)))) + '</span>' +
+    '<div style="font-size:0.8rem; color:var(--text-muted); margin-top:6px;">' + team.model + ' &middot; ' + team.modelNum + '</div></div>';
+  html += '<div class="roulette-grid">';
+  team.members.forEach(function(m, i) {
+    var role = (team.roles && team.roles[i]) || 'apoyo';
+    html += '<div class="roulette-card ' + cardTeamClass + ' animate" style="animation-delay:' + (i*0.12) + 's;">' +
+      '<div style="font-weight:600;">' + m + '</div>' +
+      '<span class="role-badge ' + role + '">' + roleLabel(role) + '</span>' +
+      '</div>';
+  });
+  html += '</div></div>';
+  return html;
+}
+
+function renderRouletteFinal() {
+  var container = document.getElementById('roulette-content');
+  if (!container) return;
+  var tc = getTeamCount();
+  var html = '';
   if (tc === 2) {
-    document.getElementById('fac-tab-name-1').textContent = t[1].name || 'Equipo 2';
+    html += '<div class="roulette-teams-grid">';
+    html += renderRouletteTeamColumn(0, 'team1');
+    html += renderRouletteTeamColumn(1, 'team2');
+    html += '</div>';
+  } else {
+    html += renderRouletteTeamColumn(0, 'single');
   }
+  container.innerHTML = html;
+
+  setTimeout(function() {
+    document.querySelectorAll('#roulette-content .role-badge').forEach(function(el) {
+      el.classList.add('show');
+    });
+  }, 700);
+}
+
+function renderRoulette() {
+  var container = document.getElementById('roulette-content');
+  if (!container) return;
+
+  shuffleTeamsAndRoles();
+
+  // Phase 1: shuffled/spinning display of all names before settling into teams
+  var allNames = [];
+  for (var t = 0; t < getTeamCount(); t++) {
+    state.teams[t].members.forEach(function(m) { allNames.push(m); });
+  }
+  var displayOrder = shuffleArray(allNames);
+
+  var spinHtml = '<div class="roulette-grid">';
+  displayOrder.forEach(function(name, i) {
+    spinHtml += '<div class="roulette-card spin-card" style="animation-delay:' + (i*0.05) + 's;">' + name + '</div>';
+  });
+  spinHtml += '</div>';
+  container.innerHTML = spinHtml;
+
+  setTimeout(renderRouletteFinal, 2200);
 }
 
 // ─── BRIEFING ──────────────────────────────────────
@@ -2040,21 +2180,21 @@ function renderBriefing() {
   var objEl = document.getElementById('briefing-objective');
   var rulesEl = document.getElementById('briefing-rules');
   if (getTeamCount() === 1) {
-    objEl.innerHTML = 'El equipo construira un modelo de LEGO Technic de Formula 1 usando la app <strong>LEGO Builder</strong> en modo "Construye en compania". La app distribuye las instrucciones entre los integrantes — cada quien arma su seccion y al final las unen.';
+    objEl.innerHTML = 'El equipo construira un modelo de LEGO Technic de Formula 1 siguiendo el manual de instrucciones fisico. La app coordina quien construye cada seccion — cada quien arma su parte y al final las unen.';
     rulesEl.innerHTML =
       '<li><strong>1.</strong> El equipo recibe su caja de LEGO sellada. No pueden abrirla hasta que comience la etapa de construccion.</li>' +
-      '<li><strong>2.</strong> Usaran la app LEGO Builder en modo "Construye en compania". El anfitrion escanea el QR del manual y comparte el codigo de 6 digitos.</li>' +
-      '<li><strong>3.</strong> La app reparte las instrucciones: cada quien arma una seccion diferente en su celular. Cuando terminas tu parte, la app te dice a quien darsela para el ensamble.</li>' +
+      '<li><strong>2.</strong> El manual de instrucciones se divide en secciones. La app asigna que seccion le toca a cada constructor.</li>' +
+      '<li><strong>3.</strong> Cada constructor sigue las paginas del manual que le corresponden. Cuando termina su seccion, entrega las piezas armadas para el ensamble final.</li>' +
       '<li><strong>4.</strong> Maximo 4 constructores simultaneos. Los demas apoyan, organizan piezas y se rotan con los constructores activos.</li>' +
       '<li><strong>5.</strong> El facilitador activara retos sorpresa durante la construccion. Cada reto tiene reglas y tiempo.</li>' +
       '<li><strong>6.</strong> Al terminar, el equipo presentara su experiencia respondiendo preguntas de reflexion.</li>';
   } else {
-    objEl.innerHTML = 'Cada equipo construira un modelo de LEGO Technic de Formula 1 usando la app <strong>LEGO Builder</strong> en modo "Construye en compania". La app distribuye las instrucciones entre los integrantes — cada quien arma su seccion y al final las unen.';
+    objEl.innerHTML = 'Cada equipo construira un modelo de LEGO Technic de Formula 1 siguiendo el manual de instrucciones fisico. La app coordina quien construye cada seccion — cada quien arma su parte y al final las unen.';
     rulesEl.innerHTML =
-      '<li><strong>1.</strong> Cada equipo recibe su caja de LEGO sellada. No pueden abrirla hasta que comience la etapa de construccion.</li>' +
-      '<li><strong>2.</strong> Usaran la app LEGO Builder en modo "Construye en compania". El anfitrion escanea el QR del manual y comparte el codigo de 6 digitos.</li>' +
-      '<li><strong>3.</strong> La app reparte las instrucciones: cada quien arma una seccion diferente en su celular. Cuando terminas tu parte, la app te dice a quien darsela para el ensamble.</li>' +
-      '<li><strong>4.</strong> Maximo 4 constructores simultaneos por equipo. El 5to integrante apoya, organiza piezas y se rota con los demas.</li>' +
+      '<li><strong>1.</strong> El equipo recibe su caja de LEGO sellada. No pueden abrirla hasta que comience la etapa de construccion.</li>' +
+      '<li><strong>2.</strong> El manual de instrucciones se divide en secciones. La app asigna que seccion le toca a cada constructor.</li>' +
+      '<li><strong>3.</strong> Cada constructor sigue las paginas del manual que le corresponden. Cuando termina su seccion, entrega las piezas armadas para el ensamble final.</li>' +
+      '<li><strong>4.</strong> Maximo 4 constructores simultaneos por equipo. Los demas apoyan, organizan piezas y se rotan con los constructores activos.</li>' +
       '<li><strong>5.</strong> El facilitador activara retos sorpresa durante la construccion. Cada reto tiene reglas y tiempo.</li>' +
       '<li><strong>6.</strong> Al terminar, cada equipo presentara su experiencia respondiendo preguntas de reflexion.</li>';
   }
@@ -2452,10 +2592,66 @@ function getTeamTotal(t) {
   return Object.values(s).reduce((a, b) => a + b, 0);
 }
 
+function renderSectionAssignment() {
+  var container = document.getElementById('section-assignment-grid');
+  if (!container) return;
+  var single = getTeamCount() === 1;
+  container.style.gridTemplateColumns = single ? '1fr' : '1fr 1fr';
+  var html = '';
+  for (var t = 0; t < getTeamCount(); t++) {
+    var team = state.teams[t];
+    if (!team.roles || team.roles.length !== team.members.length) {
+      team.roles = assignRoles(team.members.length);
+    }
+    var colorClass = single ? '' : (t === 0 ? 'card-team1' : 'card-team2');
+    var badgeClass = single ? 'badge-gold' : (t === 0 ? 'badge-team1' : 'badge-team2');
+    var extraStyle = single ? 'border-color: var(--accent-gold); border-width:2px;' : '';
+    var sections = MODEL_SECTIONS[team.modelNum] || { total: 8, label: 'Bolsa' };
+
+    var constructorIdxs = [];
+    var apoyoIdxs = [];
+    team.members.forEach(function(m, i) {
+      if (team.roles[i] === 'apoyo') apoyoIdxs.push(i); else constructorIdxs.push(i);
+    });
+
+    var totalSections = sections.total;
+    var cCount = constructorIdxs.length || 1;
+    var base = Math.floor(totalSections / cCount);
+    var extra = totalSections % cCount;
+    var cursor = 1;
+
+    html += '<div class="card ' + colorClass + '" style="' + extraStyle + ' padding:18px;">';
+    html += '<div class="flex-between mb-md"><span class="badge ' + badgeClass + '">' +
+      (team.name || (single ? 'Equipo' : ('Equipo ' + (t+1)))) + '</span>' +
+      '<span style="font-size:0.75rem; color:var(--text-muted);">' + sections.label + 's 1-' + totalSections + '</span></div>';
+
+    constructorIdxs.forEach(function(idx, k) {
+      var count = base + (k < extra ? 1 : 0);
+      var start = cursor;
+      var end = cursor + count - 1;
+      cursor += count;
+      var tag = team.roles[idx] === 'coordinador' ? ' (Coordinador)' : ' (Constructor)';
+      var rangeLabel = count > 0 ? (sections.label + 's ' + start + (end > start ? ('-' + end) : '')) : 'Sin seccion asignada';
+      html += '<div class="dist-member-row"><span class="dist-member-name">' +
+        (team.members[idx] || ('Integrante ' + (idx+1))) + tag + '</span>' +
+        '<span class="dist-member-target">' + rangeLabel + '</span></div>';
+    });
+    apoyoIdxs.forEach(function(idx) {
+      html += '<div class="dist-member-row"><span class="dist-member-name">' +
+        (team.members[idx] || ('Integrante ' + (idx+1))) + ' (Apoyo)</span>' +
+        '<span class="dist-member-target">Organiza piezas, rota cuando alguien termine</span></div>';
+    });
+    html += '</div>';
+  }
+  container.innerHTML = html;
+}
+
 function renderConstruction() {
+  renderSectionAssignment();
+
   // Stage indicator
-  const stages = ['Briefing', 'Estrategia', 'Construccion', 'Reflexion', 'Resultados'];
-  const currentStageIdx = 2;
+  const stages = ['Registro', 'Sorteo', 'Briefing', 'Estrategia', 'Construccion', 'Reflexion', 'Resultados'];
+  const currentStageIdx = 4;
   let stageHtml = '';
   stages.forEach((s, i) => {
     if (i > 0) stageHtml += `<div class="stage-line${i <= currentStageIdx ? ' completed' : ''}"></div>`;
@@ -2617,9 +2813,11 @@ function doReset() {
   state = {
     currentScreen: 'welcome',
     mode: 'two-teams',
+    participants: ['','','','','','','','','',''],
+    rouletteAssigned: false,
     teams: [
-      { name:'', members:['','','','',''], model:'Oracle Red Bull Racing RB20 F1', modelNum:'#42206', progress:0, scores:{communication:0,organization:0,participation:0,collaboration:0,adaptation:0,decisions:0,quality:0,time:0,bonus:0,challenges:0}, challengesCompleted:[], buildTurns:[0,0,0,0,0], currentBuilder:0, strategy:'', reflection:['','','','','',''], notes:'' },
-      { name:'', members:['','','','',''], model:'Ferrari SF-24 F1', modelNum:'#42207', progress:0, scores:{communication:0,organization:0,participation:0,collaboration:0,adaptation:0,decisions:0,quality:0,time:0,bonus:0,challenges:0}, challengesCompleted:[], buildTurns:[0,0,0,0,0], currentBuilder:0, strategy:'', reflection:['','','','','',''], notes:'' }
+      { name:'', members:['','','','',''], roles:[], model:'Oracle Red Bull Racing RB20 F1', modelNum:'#42206', progress:0, scores:{communication:0,organization:0,participation:0,collaboration:0,adaptation:0,decisions:0,quality:0,time:0,bonus:0,challenges:0}, challengesCompleted:[], buildTurns:[0,0,0,0,0], currentBuilder:0, strategy:'', reflection:['','','','','',''], notes:'' },
+      { name:'', members:['','','','',''], roles:[], model:'Ferrari SF-24 F1', modelNum:'#42207', progress:0, scores:{communication:0,organization:0,participation:0,collaboration:0,adaptation:0,decisions:0,quality:0,time:0,bonus:0,challenges:0}, challengesCompleted:[], buildTurns:[0,0,0,0,0], currentBuilder:0, strategy:'', reflection:['','','','','',''], notes:'' }
     ],
     timerElapsed:0, timerRunning:false, timerStartedAt:null,
     activeChallenge:null, challengeCountdown:0, challengeRunning:false, challengeTargetTeam:'both', facSelectedTeam:0
@@ -2669,7 +2867,7 @@ function init() {
     setMode(state.mode);
   }
 
-  restoreTeamInputs();
+  updateFacTabNames();
 
   if (state.currentScreen && state.currentScreen !== 'welcome') {
     goToScreen(state.currentScreen);
