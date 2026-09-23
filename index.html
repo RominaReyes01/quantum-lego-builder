@@ -1830,6 +1830,7 @@ const PIECE_COUNTS = { '#42206': 1065, '#42207': 1362 };
 const MODEL_SECTIONS = {
   '#42206': {
     label: 'Bolsa',
+    pdfUrl: 'https://www.lego.com/cdn/product-assets/product.bi.core.pdf/6569475.pdf',
     sections: [
       { bags: 'Bolsas 1 y 2', pages: 'Pags. 12-106', pageCount: 95, desc: 'Chasis base y motor' },
       { bags: 'Bolsa 4', pages: 'Pags. 107-189', pageCount: 83, desc: 'Suspension y estructura central' },
@@ -1847,6 +1848,7 @@ const MODEL_SECTIONS = {
   },
   '#42207': {
     label: 'Bolsa',
+    pdfUrl: 'https://www.lego.com/cdn/product-assets/product.bi.core.pdf/6569476.pdf',
     sections: [
       { bags: 'Bolsas 1 y 2', pages: 'Pags. 12-75', pageCount: 64, desc: 'Chasis base y estructura' },
       { bags: 'Bolsa 3', pages: 'Pags. 76-135', pageCount: 60, desc: 'Motor y transmision' },
@@ -2654,12 +2656,18 @@ function renderSectionAssignment() {
     html += '<div class="flex-between mb-md"><span class="badge ' + badgeClass + '">' +
       (team.name || (single ? 'Equipo' : ('Equipo ' + (t+1)))) + '</span>' +
       '<span style="font-size:0.75rem; color:var(--text-muted);">' + team.model + '</span></div>';
+    var pdfUrl = sectionData.pdfUrl || '';
     constructorIdxs.forEach(function(idx, k) {
       var section = k < sections.length ? sections[k] : null;
       var tag = team.roles[idx] === 'coordinador' ? ' (Coordinador)' : ' (Constructor)';
       var name = team.members[idx] || ('Integrante ' + (idx+1));
       if (section) {
         var pageInfo = section.pageCount ? (section.pageCount + ' pags.') : '';
+        var startPage = section.pages.match(/\d+/);
+        var pdfLink = (pdfUrl && startPage) ? (pdfUrl + '#page=' + startPage[0]) : '';
+        var pagesHtml = pdfLink
+          ? '<a href="' + pdfLink + '" target="_blank" style="font-size:0.78rem; color:var(--accent-gold); text-decoration:underline; white-space:nowrap; cursor:pointer;">' + section.pages + ' &#8599;</a>'
+          : '<span style="font-size:0.78rem; color:var(--text-secondary); white-space:nowrap;">' + section.pages + '</span>';
         html += '<div style="padding:10px 0; border-bottom:1px solid var(--border-subtle);">' +
           '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">' +
           '<span style="font-weight:600; font-size:0.88rem;">' + name + tag + '</span>' +
@@ -2667,7 +2675,7 @@ function renderSectionAssignment() {
           '</div>' +
           '<div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">' +
           '<span style="background:var(--accent-gold-dim); color:var(--accent-gold); font-size:0.72rem; font-weight:600; padding:2px 8px; border-radius:4px; white-space:nowrap;">' + section.bags + '</span>' +
-          '<span style="font-size:0.78rem; color:var(--text-secondary); white-space:nowrap;">' + section.pages + '</span>' +
+          pagesHtml +
           '</div>' +
           '<div style="font-size:0.75rem; color:var(--text-muted); font-style:italic; margin-top:3px;">' + section.desc + '</div>' +
           '</div>';
