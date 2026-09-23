@@ -1089,6 +1089,27 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
 .w-full { width: 100%; }
 [hidden] { display: none !important; }
 
+/* Back button */
+.btn-back {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 6px 16px;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-back:hover {
+  color: var(--accent-gold);
+  border-color: var(--accent-gold);
+}
+
 /* Facilitator instructions */
 .fac-instructions {
   background: var(--accent-gold-dim);
@@ -1236,6 +1257,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
 <div id="screen-setup" class="screen">
   <div class="setup-container">
     <div class="text-center mb-lg">
+      <button class="btn-back" onclick="goToScreen('welcome')">&larr; Cambiar modalidad</button>
       <span class="badge badge-gold">Paso 1 de 6</span>
       <h2 class="mt-md">Registro de equipos</h2>
       <p class="text-muted mt-sm">El facilitador registra los equipos y sus integrantes.</p>
@@ -2631,6 +2653,13 @@ window.addEventListener('message', function(e) {
 
 // ─── INIT ──────────────────────────────────────────
 function init() {
+  // ?reset in URL forces back to welcome
+  if (window.location.search.includes('reset')) {
+    doReset();
+    window.history.replaceState({}, '', window.location.pathname);
+    return;
+  }
+
   loadState();
 
   // Restore mode selector UI
