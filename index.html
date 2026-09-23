@@ -2097,6 +2097,29 @@ const BUILDER_COLORS = [
   { bg: '#B8860B', light: '#DAA520', dim: 'rgba(184,134,11,0.12)', name: 'Dorado' }
 ];
 
+const AVATAR_MAP = {
+  'romina': 'avatars/romina.png',
+  'nayely': 'avatars/nayely.png',
+  'nayeli': 'avatars/nayely.png',
+  'johan': 'avatars/johan.png',
+  'juan': 'avatars/juan.png',
+  'ruben': 'avatars/ruben.png',
+  'alejandra': 'avatars/alejandra.png',
+  'victor': 'avatars/victor.png',
+  'bryan': 'avatars/bryan.png',
+  'valerie': 'avatars/valerie.png',
+  'christian': 'avatars/christian.png'
+};
+
+function getAvatarSrc(name) {
+  if (!name) return '';
+  var key = name.trim().toLowerCase().normalize('NFD').replace(new RegExp('[\u0300-\u036f]', 'g'), '');
+  for (var k in AVATAR_MAP) {
+    if (key.indexOf(k) === 0 || k.indexOf(key.split(' ')[0]) === 0) return AVATAR_MAP[k];
+  }
+  return '';
+}
+
 const MODEL_SECTIONS = {
   '#42206': {
     label: 'Bolsa',
@@ -2918,7 +2941,21 @@ function openBuilderDetail(teamIdx, constructorK) {
   var pdfLink = (pdfUrl && startPage) ? (pdfUrl + '#page=' + startPage[0]) : '';
 
   document.getElementById('builder-detail-header').style.background = 'linear-gradient(135deg, ' + color.bg + ', ' + color.light + ')';
-  document.getElementById('bd-number').textContent = constructorK + 1;
+  var avatarSrc = getAvatarSrc(name);
+  var bdNum = document.getElementById('bd-number');
+  if (avatarSrc) {
+    bdNum.innerHTML = '<img src="' + avatarSrc + '" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.5);">';
+    bdNum.style.background = 'transparent';
+    bdNum.style.width = 'auto';
+    bdNum.style.height = 'auto';
+    bdNum.style.fontSize = '0';
+  } else {
+    bdNum.textContent = constructorK + 1;
+    bdNum.style.background = 'rgba(0,0,0,0.2)';
+    bdNum.style.width = '48px';
+    bdNum.style.height = '48px';
+    bdNum.style.fontSize = '1.4rem';
+  }
   document.getElementById('bd-bag-label').textContent = section.bags.toUpperCase();
   document.getElementById('bd-name').textContent = name;
   document.getElementById('bd-role').textContent = role;
@@ -2975,9 +3012,13 @@ function renderSectionAssignment() {
       var section = k < sections.length ? sections[k] : null;
       var name = team.members[idx] || ('Integrante ' + (idx + 1));
       var color = BUILDER_COLORS[k % BUILDER_COLORS.length];
+      var avatarSrc = getAvatarSrc(name);
+      var dotHtml = avatarSrc
+        ? '<div class="builder-color-dot" style="background:' + color.bg + '; padding:2px;"><img src="' + avatarSrc + '" style="width:100%;height:100%;border-radius:8px;object-fit:cover;"></div>'
+        : '<div class="builder-color-dot" style="background:' + color.bg + ';">' + (k + 1) + '</div>';
       if (section) {
         html += '<div class="builder-section-card" style="background:' + color.dim + '; border-color:' + color.bg + '22;" onclick="openBuilderDetail(' + t + ',' + k + ')">';
-        html += '<div class="builder-color-dot" style="background:' + color.bg + ';">' + (k + 1) + '</div>';
+        html += dotHtml;
         html += '<div class="builder-card-info">';
         html += '<div class="builder-card-name">' + name + '</div>';
         html += '<div class="builder-card-section">';
@@ -2988,7 +3029,7 @@ function renderSectionAssignment() {
         html += '</div>';
       } else {
         html += '<div class="builder-section-card" style="background:' + color.dim + ';">';
-        html += '<div class="builder-color-dot" style="background:' + color.bg + ';">' + (k + 1) + '</div>';
+        html += dotHtml;
         html += '<div class="builder-card-info"><div class="builder-card-name">' + name + '</div>';
         html += '<div class="builder-card-section">Seccion por asignar</div></div></div>';
       }
@@ -2998,8 +3039,12 @@ function renderSectionAssignment() {
       html += '<div style="font-size:0.7rem; font-weight:600; letter-spacing:0.08em; color:var(--text-muted); text-transform:uppercase; margin-top:14px; margin-bottom:8px;">APOYO</div>';
       apoyoIdxs.forEach(function(idx) {
         var name = team.members[idx] || ('Integrante ' + (idx + 1));
+        var avatarSrc = getAvatarSrc(name);
+        var apoImg = avatarSrc
+          ? '<img src="' + avatarSrc + '" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;">'
+          : '<div style="width:32px; height:32px; border-radius:8px; background:var(--border-subtle); display:flex; align-items:center; justify-content:center; font-size:0.75rem; color:var(--text-muted);">&#9733;</div>';
         html += '<div style="padding:10px 14px; border-radius:var(--radius-md); background:var(--bg-surface); margin-bottom:6px; display:flex; align-items:center; gap:10px;">';
-        html += '<div style="width:32px; height:32px; border-radius:8px; background:var(--border-subtle); display:flex; align-items:center; justify-content:center; font-size:0.75rem; color:var(--text-muted);">&#9733;</div>';
+        html += apoImg;
         html += '<div><div style="font-weight:600; font-size:0.85rem;">' + name + '</div>';
         html += '<div style="font-size:0.72rem; color:var(--text-muted);">Organiza piezas y rota cuando alguien termine</div></div></div>';
       });
