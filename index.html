@@ -1146,64 +1146,68 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
 /* Facilitator instructions */
 .fac-instructions {
   background: var(--accent-gold-dim);
-  border: 1px solid rgba(201,162,39,0.25);
-  border-radius: var(--radius-md);
-  margin-bottom: 20px;
+  border: 2px solid rgba(201,162,39,0.35);
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
   overflow: hidden;
 }
 .fac-instructions summary {
-  padding: 10px 16px;
+  padding: 14px 20px;
   font-family: var(--font-display);
-  font-size: 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 700;
   letter-spacing: 0.1em;
   color: var(--accent-gold-light);
   cursor: pointer;
   list-style: none;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 .fac-instructions summary::-webkit-details-marker { display: none; }
 .fac-instructions summary::before {
-  content: '?';
+  content: '!';
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: var(--accent-gold);
   color: var(--text-inverse);
   font-family: var(--font-body);
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   font-weight: 700;
   flex-shrink: 0;
 }
-.fac-instructions[open] summary::before { content: ''; }
+.fac-instructions[open] summary::before { content: '!'; }
 .fac-instructions .inst-body {
-  padding: 0 16px 14px;
-  font-size: 0.82rem;
-  line-height: 1.55;
+  padding: 0 20px 18px;
+  font-size: 0.95rem;
+  line-height: 1.65;
   color: var(--text-secondary);
 }
 .fac-instructions .inst-body ol,
 .fac-instructions .inst-body ul {
-  padding-left: 18px;
-  margin: 6px 0;
+  padding-left: 20px;
+  margin: 8px 0;
 }
 .fac-instructions .inst-body li {
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
 }
 .fac-instructions .inst-body strong {
   color: var(--text-primary);
 }
 .fac-instructions .inst-body .inst-tip {
-  margin-top: 8px;
-  padding: 6px 10px;
-  background: rgba(201,162,39,0.08);
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(201,162,39,0.12);
   border-radius: var(--radius-sm);
-  font-size: 0.78rem;
+  font-size: 0.9rem;
+  font-weight: 500;
   color: var(--accent-gold-light);
+  border-left: 3px solid var(--accent-gold);
 }
 
 .checkered-divider {
@@ -1262,18 +1266,19 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
     <div class="welcome-stat"><strong>2</strong>Modelos F1</div>
     <div class="welcome-stat"><strong>&#9733;</strong>Retos sorpresa</div>
   </div>
-  <details class="fac-instructions" style="max-width:560px; margin:20px auto 0;">
-    <summary>GUIA RAPIDA DEL FACILITADOR</summary>
+  <details class="fac-instructions" open style="max-width:640px; margin:20px auto 0;">
+    <summary>INSTRUCCIONES PARA EL FACILITADOR</summary>
     <div class="inst-body">
       <ol>
-        <li><strong>Registro:</strong> Escribe el nombre de cada equipo y sus 5 integrantes.</li>
-        <li><strong>Briefing:</strong> Lee las reglas en voz alta al grupo. Asegurate de que todos tengan la app LEGO Builder instalada.</li>
-        <li><strong>Estrategia:</strong> Da 5 minutos para que cada equipo discuta su plan.</li>
-        <li><strong>Construccion:</strong> Inicia el timer. Usa el boton de engranaje (esquina inferior derecha) para abrir tu panel de control.</li>
-        <li><strong>Reflexion:</strong> Cada equipo responde las preguntas en voz alta o por escrito.</li>
-        <li><strong>Resultados:</strong> Proyecta la pantalla final para cerrar la actividad.</li>
+        <li><strong>Elige la modalidad:</strong> Arriba selecciona si juegan en <strong>2 equipos</strong> (5 vs 5, cada uno con su modelo) o <strong>todos juntos</strong> (10 personas, un solo modelo).</li>
+        <li><strong>Registro:</strong> Escribe el nombre del equipo y los nombres de cada integrante. El orden importa: el integrante 1 sera el primer constructor.</li>
+        <li><strong>Briefing:</strong> Lee las reglas en voz alta. Asegurate de que todos tengan la <strong>app LEGO Builder</strong> instalada en su celular.</li>
+        <li><strong>Estrategia:</strong> Da 5 minutos para que discutan como se van a organizar.</li>
+        <li><strong>Construccion:</strong> Inicia el timer. Abre tu <strong>panel de control</strong> con el boton de engranaje dorado (esquina inferior derecha). Desde ahi manejas el progreso, los retos y la rotacion de constructores.</li>
+        <li><strong>Reflexion:</strong> Cada equipo responde las preguntas en voz alta. Tu puedes anotar lo que dicen.</li>
+        <li><strong>Resultados:</strong> Proyecta la pantalla final para cerrar la actividad con un mensaje positivo.</li>
       </ol>
-      <div class="inst-tip">Tu panel de control (engranaje dorado) es tu herramienta principal durante la construccion. Desde ahi manejas el progreso, los retos y la rotacion.</div>
+      <div class="inst-tip">El boton de engranaje dorado (esquina inferior derecha) es tu herramienta principal. Desde ahi controlas todo: progreso, retos sorpresa, rotacion de constructores y notas.</div>
     </div>
   </details>
   <button class="btn btn-gold btn-lg" style="margin-top:16px;" onclick="goToScreen('setup')">COMENZAR EXPERIENCIA</button>
@@ -1289,16 +1294,8 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
       <h2 class="mt-md">Registro de equipos</h2>
       <p class="text-muted mt-sm">El facilitador registra los equipos y sus integrantes.</p>
     </div>
-    <details class="fac-instructions">
-      <summary>COMO LLENAR ESTA PANTALLA</summary>
-      <div class="inst-body">
-        <ul>
-          <li>Escribe un <strong>nombre creativo</strong> para cada equipo (ellos lo eligen).</li>
-          <li>Registra los <strong>5 nombres</strong> de cada integrante. El orden importa: el integrante 1 sera el primer constructor.</li>
-          <li>El <strong>Equipo 1</strong> armara el Red Bull RB20 (1,065 piezas) y el <strong>Equipo 2</strong> el Ferrari SF-24 (1,362 piezas).</li>
-        </ul>
-        <div class="inst-tip">Cuando termines, da clic en "Iniciar actividad". Esto guarda los datos y avanza al briefing.</div>
-      </div>
+    <details class="fac-instructions" open id="setup-instructions">
+      <!-- Updated dynamically by renderSetupInstructions() -->
     </details>
     <div id="setup-content">
       <!-- Rendered by JS based on mode -->
@@ -1319,7 +1316,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
       <h2 class="mt-md">Briefing</h2>
       <p class="text-muted mt-sm">Antes de comenzar, estas son las reglas del juego.</p>
     </div>
-    <details class="fac-instructions">
+    <details class="fac-instructions" open>
       <summary>QUE HACER COMO FACILITADOR</summary>
       <div class="inst-body">
         <ul>
@@ -1385,7 +1382,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
       <h2 class="mt-md">Estrategia de equipo</h2>
       <p class="text-muted mt-sm">Antes de construir, organicense. Tienen unos minutos para definir su estrategia.</p>
     </div>
-    <details class="fac-instructions">
+    <details class="fac-instructions" open>
       <summary>QUE HACER COMO FACILITADOR</summary>
       <div class="inst-body">
         <ul>
@@ -1419,22 +1416,22 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
       <div class="stage-indicator" id="stage-indicator"></div>
     </div>
 
-    <details class="fac-instructions">
+    <details class="fac-instructions" open>
       <summary>COMO USAR ESTA PANTALLA</summary>
       <div class="inst-body">
         <ol>
-          <li><strong>Inicia el timer</strong> con el boton "Continuar" cuando empiece la construccion.</li>
-          <li>Abre tu <strong>panel de control</strong> con el boton de engranaje dorado (esquina inferior derecha).</li>
+          <li><strong>Inicia el timer</strong> con el boton "Iniciar" para comenzar a contar el tiempo de construccion.</li>
+          <li>Abre tu <strong>panel de control</strong> tocando el boton de engranaje dorado en la esquina inferior derecha de la pantalla.</li>
           <li>Desde el panel puedes:
             <ul>
-              <li><strong>Ajustar el progreso</strong> de cada equipo con el slider (0-100%).</li>
+              <li><strong>Ajustar el progreso</strong> del equipo con el slider (0-100%).</li>
               <li><strong>Activar retos sorpresa</strong> para dinamizar la actividad.</li>
-              <li><strong>Rotar constructores</strong> manualmente o con el temporizador automatico.</li>
-              <li><strong>Tomar notas</strong> sobre lo que observas en cada equipo.</li>
+              <li><strong>Rotar constructores</strong> — manualmente con el boton "Siguiente turno", o activando el temporizador automatico.</li>
+              <li><strong>Tomar notas</strong> sobre lo que observas (comunicacion, liderazgo, organizacion).</li>
             </ul>
           </li>
         </ol>
-        <div class="inst-tip">El temporizador de rotacion suena y rota automaticamente al constructor cuando se acaba el tiempo. Pon 5 min para empezar y ajusta segun el ritmo del equipo.</div>
+        <div class="inst-tip">El temporizador de rotacion suena y cambia automaticamente al siguiente constructor cuando se acaba el tiempo. Recomendacion: empieza con 5 minutos y ajusta segun el ritmo.</div>
       </div>
     </details>
 
@@ -1482,7 +1479,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
       <h2 class="mt-md">Vuelta final</h2>
       <p class="text-muted mt-sm">Cada equipo reflexiona sobre su experiencia.</p>
     </div>
-    <details class="fac-instructions">
+    <details class="fac-instructions" open>
       <summary>QUE HACER COMO FACILITADOR</summary>
       <div class="inst-body">
         <ul>
@@ -1512,7 +1509,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
       <h2 class="mt-md">RACE CONTROL</h2>
       <p class="text-muted mt-sm">Rendimiento final de los equipos</p>
     </div>
-    <details class="fac-instructions">
+    <details class="fac-instructions" open>
       <summary>QUE HACER COMO FACILITADOR</summary>
       <div class="inst-body">
         <ul>
@@ -1916,7 +1913,36 @@ function renderSetup() {
   }
 
   container.innerHTML = html;
+  renderSetupInstructions();
   restoreTeamInputs();
+}
+
+function renderSetupInstructions() {
+  var el = document.getElementById('setup-instructions');
+  if (!el) return;
+  if (state.mode === 'all-together') {
+    el.innerHTML = '<summary>COMO LLENAR ESTA PANTALLA</summary>' +
+      '<div class="inst-body">' +
+      '<ul>' +
+      '<li>Escribe un <strong>nombre para el equipo</strong> (que ellos lo elijan).</li>' +
+      '<li>Selecciona el <strong>modelo a construir</strong>: Red Bull RB20 (1,065 piezas) o Ferrari SF-24 (1,362 piezas).</li>' +
+      '<li>Registra los <strong>10 nombres</strong> de los participantes. El orden importa: el integrante 1 sera el primer constructor.</li>' +
+      '<li>Recuerda: maximo <strong>4 constructores simultaneos</strong> en la app LEGO Builder. Los demas apoyan y se rotan.</li>' +
+      '</ul>' +
+      '<div class="inst-tip">Cuando termines, da clic en "Iniciar actividad". Esto guarda los datos y avanza al briefing.</div>' +
+      '</div>';
+  } else {
+    el.innerHTML = '<summary>COMO LLENAR ESTA PANTALLA</summary>' +
+      '<div class="inst-body">' +
+      '<ul>' +
+      '<li>Escribe un <strong>nombre creativo</strong> para cada equipo (que ellos lo elijan).</li>' +
+      '<li>Registra los <strong>5 nombres</strong> de cada equipo. El orden importa: el integrante 1 sera el primer constructor.</li>' +
+      '<li>El <strong>Equipo 1</strong> armara el Red Bull RB20 (1,065 piezas) y el <strong>Equipo 2</strong> el Ferrari SF-24 (1,362 piezas).</li>' +
+      '<li>Recuerda: maximo <strong>4 constructores simultaneos</strong> por equipo. El 5to apoya y se rota.</li>' +
+      '</ul>' +
+      '<div class="inst-tip">Cuando termines, da clic en "Iniciar actividad". Esto guarda los datos y avanza al briefing.</div>' +
+      '</div>';
+  }
 }
 
 function selectModel(teamIdx, modelNum) {
