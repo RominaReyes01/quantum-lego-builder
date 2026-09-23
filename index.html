@@ -1835,6 +1835,16 @@ const MODEL_SECTIONS = {
       { bags: 'Bolsa 4', pages: 'Pags. 107-189', pageCount: 83, desc: 'Suspension y estructura central' },
       { bags: 'Bolsas 6 y 7', pages: 'Pags. 190-256', pageCount: 67, desc: 'Paneles y aerodinamica' },
       { bags: 'Bolsa 8', pages: 'Pags. 257-370', pageCount: 114, desc: 'Carroceria, nariz y llantas' }
+    ],
+    sectionsLarge: [
+      { bags: 'Bolsas 1 y 2a', pages: 'Pags. 12-55', pageCount: 44, desc: 'Chasis base' },
+      { bags: 'Bolsa 2b', pages: 'Pags. 56-106', pageCount: 51, desc: 'Motor' },
+      { bags: 'Bolsa 4a', pages: 'Pags. 107-148', pageCount: 42, desc: 'Suspension delantera' },
+      { bags: 'Bolsa 4b', pages: 'Pags. 149-189', pageCount: 41, desc: 'Suspension trasera y estructura' },
+      { bags: 'Bolsa 6', pages: 'Pags. 190-232', pageCount: 43, desc: 'Paneles laterales' },
+      { bags: 'Bolsas 7 y 8a', pages: 'Pags. 233-280', pageCount: 48, desc: 'Aleron y carroceria inicio' },
+      { bags: 'Bolsa 8b', pages: 'Pags. 281-325', pageCount: 45, desc: 'Carroceria media' },
+      { bags: 'Bolsa 8c', pages: 'Pags. 326-370', pageCount: 45, desc: 'Nariz y llantas' }
     ]
   },
   '#42207': {
@@ -1844,6 +1854,16 @@ const MODEL_SECTIONS = {
       { bags: 'Bolsa 3', pages: 'Pags. 76-135', pageCount: 60, desc: 'Motor y transmision' },
       { bags: 'Bolsas 5 y 6', pages: 'Pags. 136-207', pageCount: 72, desc: 'Suspension y paneles laterales' },
       { bags: 'Bolsas 7 y 8', pages: 'Pags. 208-308', pageCount: 101, desc: 'Aerodinamica, carroceria y llantas' }
+    ],
+    sectionsLarge: [
+      { bags: 'Bolsa 1', pages: 'Pags. 12-51', pageCount: 40, desc: 'Chasis base' },
+      { bags: 'Bolsas 2 y 3a', pages: 'Pags. 52-90', pageCount: 39, desc: 'Estructura y motor inicio' },
+      { bags: 'Bolsa 3b', pages: 'Pags. 91-135', pageCount: 45, desc: 'Motor' },
+      { bags: 'Bolsas 5 y 6a', pages: 'Pags. 136-175', pageCount: 40, desc: 'Suspension y paneles inicio' },
+      { bags: 'Bolsa 6b', pages: 'Pags. 176-207', pageCount: 32, desc: 'Paneles laterales' },
+      { bags: 'Bolsa 7', pages: 'Pags. 208-235', pageCount: 28, desc: 'Aleron y detalles' },
+      { bags: 'Bolsa 8a', pages: 'Pags. 236-272', pageCount: 37, desc: 'Carroceria' },
+      { bags: 'Bolsa 8b', pages: 'Pags. 273-308', pageCount: 36, desc: 'Nariz y llantas' }
     ]
   }
 };
@@ -2074,7 +2094,7 @@ function assignRoles(size) {
   for (var i = 0; i < size; i++) idx.push(i);
   idx = shuffleArray(idx);
   var roles = new Array(size).fill('apoyo');
-  var constructorCount = Math.min(4, size);
+  var constructorCount = size > 5 ? Math.min(8, size - 2) : Math.min(4, size);
   for (var k = 0; k < constructorCount; k++) {
     roles[idx[k]] = (k === 0) ? 'coordinador' : 'constructor';
   }
@@ -2635,7 +2655,7 @@ function renderSectionAssignment() {
       (team.name || (single ? 'Equipo' : ('Equipo ' + (t+1)))) + '</span>' +
       '<span style="font-size:0.75rem; color:var(--text-muted);">' + team.model + '</span></div>';
 
-    var sections = sectionData.sections || [];
+    var sections = (constructorIdxs.length > 4 && sectionData.sectionsLarge) ? sectionData.sectionsLarge : (sectionData.sections || []);
     constructorIdxs.forEach(function(idx, k) {
       var section = k < sections.length ? sections[k] : null;
       var tag = team.roles[idx] === 'coordinador' ? ' (Coordinador)' : ' (Constructor)';
