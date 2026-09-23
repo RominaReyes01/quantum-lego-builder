@@ -7,39 +7,39 @@
    TOKENS
    ══════════════════════════════════════════ */
 :root {
-  --bg-deep: #080810;
-  --bg-primary: #0c0c18;
-  --bg-surface: #131320;
-  --bg-card: #1a1a2c;
-  --bg-elevated: #22223a;
-  --bg-input: #16162a;
+  --bg-deep: #FFC933;
+  --bg-primary: #FFD24D;
+  --bg-surface: #FFE082;
+  --bg-card: #ffffff;
+  --bg-elevated: #FFF3CC;
+  --bg-input: #ffffff;
 
-  --accent-gold: #c9a227;
-  --accent-gold-light: #e4be3a;
-  --accent-gold-dim: rgba(201,162,39,0.12);
+  --accent-gold: #E3000B;
+  --accent-gold-light: #FF1A1A;
+  --accent-gold-dim: rgba(227,0,11,0.10);
 
-  --team-1: #2563eb;
-  --team-1-light: #60a5fa;
-  --team-1-glow: rgba(37,99,235,0.18);
-  --team-1-bg: rgba(37,99,235,0.08);
+  --team-1: #00852B;
+  --team-1-light: #00A63A;
+  --team-1-glow: rgba(0,133,43,0.18);
+  --team-1-bg: rgba(0,133,43,0.08);
 
-  --team-2: #dc2626;
-  --team-2-light: #f87171;
-  --team-2-glow: rgba(220,38,38,0.18);
-  --team-2-bg: rgba(220,38,38,0.08);
+  --team-2: #6B2FA0;
+  --team-2-light: #8B4FCF;
+  --team-2-glow: rgba(107,47,160,0.18);
+  --team-2-bg: rgba(107,47,160,0.08);
 
-  --success: #22c55e;
-  --warning: #eab308;
-  --danger: #ef4444;
+  --success: #00852B;
+  --warning: #F26522;
+  --danger: #E3000B;
 
-  --text-primary: #e8e8f0;
-  --text-secondary: #9294a8;
-  --text-muted: #585a70;
-  --text-inverse: #0c0c18;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #7a7a7a;
+  --text-inverse: #ffffff;
 
-  --border-subtle: rgba(255,255,255,0.06);
-  --border-medium: rgba(255,255,255,0.10);
-  --border-strong: rgba(255,255,255,0.18);
+  --border-subtle: rgba(0,0,0,0.08);
+  --border-medium: rgba(0,0,0,0.14);
+  --border-strong: rgba(0,0,0,0.22);
 
   --font-display: 'Orbitron', 'Arial Black', sans-serif;
   --font-body: 'DM Sans', 'Segoe UI', sans-serif;
@@ -49,63 +49,10 @@
   --radius-lg: 16px;
   --radius-xl: 24px;
 
-  --shadow-card: 0 2px 12px rgba(0,0,0,0.4);
-  --shadow-elevated: 0 8px 32px rgba(0,0,0,0.5);
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.10);
+  --shadow-elevated: 0 8px 32px rgba(0,0,0,0.15);
 
-  color-scheme: dark;
-}
-
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --bg-deep: #e8e8f0;
-    --bg-primary: #f0f0f6;
-    --bg-surface: #e4e4ed;
-    --bg-card: #ffffff;
-    --bg-elevated: #f5f5fa;
-    --bg-input: #eaeaf2;
-    --accent-gold: #a07d10;
-    --accent-gold-light: #c9a227;
-    --accent-gold-dim: rgba(160,125,16,0.10);
-    --team-1-glow: rgba(37,99,235,0.10);
-    --team-1-bg: rgba(37,99,235,0.06);
-    --team-2-glow: rgba(220,38,38,0.10);
-    --team-2-bg: rgba(220,38,38,0.06);
-    --text-primary: #1a1a2c;
-    --text-secondary: #55576a;
-    --text-muted: #8a8c9e;
-    --text-inverse: #e8e8f0;
-    --border-subtle: rgba(0,0,0,0.06);
-    --border-medium: rgba(0,0,0,0.10);
-    --border-strong: rgba(0,0,0,0.18);
-    --shadow-card: 0 2px 12px rgba(0,0,0,0.08);
-    --shadow-elevated: 0 8px 32px rgba(0,0,0,0.12);
-    color-scheme: light;
-  }
-}
-:root[data-theme="dark"] {
-  --bg-deep: #080810;
-  --bg-primary: #0c0c18;
-  --bg-surface: #131320;
-  --bg-card: #1a1a2c;
-  --bg-elevated: #22223a;
-  --bg-input: #16162a;
-  --accent-gold: #c9a227;
-  --accent-gold-light: #e4be3a;
-  --accent-gold-dim: rgba(201,162,39,0.12);
-  --team-1-glow: rgba(37,99,235,0.18);
-  --team-1-bg: rgba(37,99,235,0.08);
-  --team-2-glow: rgba(220,38,38,0.18);
-  --team-2-bg: rgba(220,38,38,0.08);
-  --text-primary: #e8e8f0;
-  --text-secondary: #9294a8;
-  --text-muted: #585a70;
-  --text-inverse: #0c0c18;
-  --border-subtle: rgba(255,255,255,0.06);
-  --border-medium: rgba(255,255,255,0.10);
-  --border-strong: rgba(255,255,255,0.18);
-  --shadow-card: 0 2px 12px rgba(0,0,0,0.4);
-  --shadow-elevated: 0 8px 32px rgba(0,0,0,0.5);
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 /* ══════════════════════════════════════════
@@ -157,10 +104,10 @@ p { margin: 0; }
 .btn:active { transform: scale(0.97); }
 .btn-gold {
   background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
-  color: #0a0a10;
-  box-shadow: 0 4px 20px rgba(201,162,39,0.3);
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(227,0,11,0.25);
 }
-.btn-gold:hover { box-shadow: 0 4px 28px rgba(201,162,39,0.45); }
+.btn-gold:hover { box-shadow: 0 4px 28px rgba(227,0,11,0.4); }
 .btn-surface {
   background: var(--bg-elevated);
   color: var(--text-primary);
@@ -196,8 +143,8 @@ p { margin: 0; }
   padding: 24px;
   box-shadow: var(--shadow-card);
 }
-.card-team1 { border-color: rgba(37,99,235,0.25); background: linear-gradient(170deg, var(--team-1-bg), var(--bg-card) 40%); }
-.card-team2 { border-color: rgba(220,38,38,0.25); background: linear-gradient(170deg, var(--team-2-bg), var(--bg-card) 40%); }
+.card-team1 { border-color: rgba(0,133,43,0.25); background: linear-gradient(170deg, var(--team-1-bg), var(--bg-card) 40%); }
+.card-team2 { border-color: rgba(107,47,160,0.25); background: linear-gradient(170deg, var(--team-2-bg), var(--bg-card) 40%); }
 
 /* ══════════════════════════════════════════
    FORMS
@@ -237,7 +184,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
 }
 .progress-fill.fill-team1 { background: linear-gradient(90deg, var(--team-1), var(--team-1-light)); }
 .progress-fill.fill-team2 { background: linear-gradient(90deg, var(--team-2), var(--team-2-light)); }
-.progress-fill.fill-gold { background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light)); }
+.progress-fill.fill-gold { background: linear-gradient(90deg, var(--warning), #FF7F33); }
 .progress-label {
   display: flex;
   justify-content: space-between;
@@ -266,7 +213,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
 }
 .timer-big {
   font-size: clamp(3rem, 8vw, 6rem);
-  text-shadow: 0 0 40px rgba(201,162,39,0.25);
+  text-shadow: 0 0 40px rgba(227,0,11,0.20);
 }
 .timer-medium { font-size: clamp(1.8rem, 4vw, 2.8rem); }
 .timer-small { font-size: 1.2rem; }
@@ -285,10 +232,10 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
   border-radius: 4px;
   display: inline-block;
 }
-.badge-gold { background: var(--accent-gold-dim); color: var(--accent-gold-light); border: 1px solid rgba(201,162,39,0.2); }
-.badge-team1 { background: var(--team-1-bg); color: var(--team-1-light); border: 1px solid rgba(37,99,235,0.2); }
-.badge-team2 { background: var(--team-2-bg); color: var(--team-2-light); border: 1px solid rgba(220,38,38,0.2); }
-.badge-success { background: rgba(34,197,94,0.1); color: var(--success); border: 1px solid rgba(34,197,94,0.2); }
+.badge-gold { background: var(--accent-gold-dim); color: var(--accent-gold-light); border: 1px solid rgba(227,0,11,0.2); }
+.badge-team1 { background: var(--team-1-bg); color: var(--team-1-light); border: 1px solid rgba(0,133,43,0.2); }
+.badge-team2 { background: var(--team-2-bg); color: var(--team-2-light); border: 1px solid rgba(107,47,160,0.2); }
+.badge-success { background: rgba(0,133,43,0.1); color: var(--success); border: 1px solid rgba(0,133,43,0.2); }
 
 .stage-indicator {
   display: flex;
@@ -303,7 +250,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
   transition: all 0.3s;
 }
 .stage-dot.completed { background: var(--accent-gold); border-color: var(--accent-gold); }
-.stage-dot.current { background: var(--accent-gold-light); border-color: var(--accent-gold-light); box-shadow: 0 0 8px rgba(201,162,39,0.5); }
+.stage-dot.current { background: var(--accent-gold-light); border-color: var(--accent-gold-light); box-shadow: 0 0 8px rgba(227,0,11,0.4); }
 .stage-line { width: 24px; height: 2px; background: var(--border-medium); }
 .stage-line.completed { background: var(--accent-gold); }
 
@@ -315,9 +262,9 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
   text-align: center;
   min-height: 100vh;
   background:
-    repeating-linear-gradient(105deg, transparent, transparent 60px, rgba(201,162,39,0.015) 60px, rgba(201,162,39,0.015) 62px),
-    radial-gradient(ellipse at 50% 30%, rgba(37,99,235,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse at 30% 70%, rgba(220,38,38,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 20%, rgba(255,255,255,0.3) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(0,133,43,0.08) 0%, transparent 40%),
+    radial-gradient(ellipse at 20% 70%, rgba(107,47,160,0.06) 0%, transparent 40%),
     var(--bg-deep);
 }
 .welcome-eyebrow {
@@ -881,7 +828,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
   text-transform: uppercase;
   color: var(--accent-gold);
   background: var(--accent-gold-dim);
-  border: 1px solid rgba(201,162,39,0.2);
+  border: 1px solid rgba(227,0,11,0.2);
   padding: 8px 18px;
   border-radius: var(--radius-sm);
 }
@@ -989,7 +936,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
   transition: all 0.15s;
 }
 .fac-btn:hover { background: var(--bg-elevated); }
-.fac-btn.fac-btn-plus:hover { background: rgba(34,197,94,0.15); color: var(--success); }
+.fac-btn.fac-btn-plus:hover { background: rgba(0,133,43,0.15); color: var(--success); }
 .fac-btn.fac-btn-minus:hover { background: rgba(239,68,68,0.15); color: var(--danger); }
 
 .progress-slider {
@@ -1054,7 +1001,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
   width: 100%;
   text-align: center;
   animation: countIn 0.4s ease;
-  box-shadow: 0 0 80px rgba(201,162,39,0.15);
+  box-shadow: 0 0 80px rgba(227,0,11,0.12);
 }
 .challenge-modal .ch-eyebrow {
   font-family: var(--font-display);
@@ -1146,7 +1093,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
 /* Facilitator instructions */
 .fac-instructions {
   background: var(--accent-gold-dim);
-  border: 2px solid rgba(201,162,39,0.35);
+  border: 2px solid rgba(227,0,11,0.25);
   border-radius: var(--radius-lg);
   margin-bottom: 24px;
   overflow: hidden;
@@ -1202,7 +1149,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
 .fac-instructions .inst-body .inst-tip {
   margin-top: 12px;
   padding: 10px 14px;
-  background: rgba(201,162,39,0.12);
+  background: rgba(227,0,11,0.08);
   border-radius: var(--radius-sm);
   font-size: 0.9rem;
   font-weight: 500;
