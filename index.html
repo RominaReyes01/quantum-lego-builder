@@ -1504,7 +1504,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
     <div class="mode-card selected" id="mode-two" onclick="setMode('two-teams')">
       <span class="mode-icon">&#9876;&#65039;</span>
       <div class="mode-title">2 EQUIPOS</div>
-      <div class="mode-desc">5 vs 5 — cada equipo arma su modelo</div>
+      <div class="mode-desc">Dos equipos — cada uno arma su modelo</div>
     </div>
     <div class="mode-card" id="mode-all" onclick="setMode('all-together')">
       <span class="mode-icon">&#9997;&#65039;</span>
@@ -1522,7 +1522,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
     <summary>INSTRUCCIONES PARA EL FACILITADOR</summary>
     <div class="inst-body">
       <ol>
-        <li><strong>Elige la modalidad:</strong> Arriba selecciona si juegan en <strong>2 equipos</strong> (5 vs 5, cada uno con su modelo) o <strong>todos juntos</strong> (10 personas, un solo modelo).</li>
+        <li><strong>Elige la modalidad:</strong> Arriba selecciona si juegan en <strong>2 equipos</strong> (cada uno con su modelo) o <strong>todos juntos</strong> (un solo modelo).</li>
         <li><strong>Registro:</strong> Escribe los 10 nombres de los participantes, sin importar el orden ni el equipo.</li>
         <li><strong>Sorteo:</strong> La app asigna al azar los equipos, los roles (coordinador, constructor, apoyo) y el modelo de cada equipo. Puedes repetir el sorteo si lo necesitas.</li>
         <li><strong>Briefing:</strong> Lee las reglas en voz alta. Asegúrate de tener el <strong>manual de instrucciones físico</strong> del modelo.</li>
@@ -1546,7 +1546,7 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
       <button class="btn-back" onclick="goToScreen('welcome')">&larr; Cambiar modalidad</button>
       <span class="badge badge-gold">Paso 1 de 7</span>
       <h2 class="mt-md">Registro de participantes</h2>
-      <p class="text-muted mt-sm">El facilitador registra a los 10 participantes. Los equipos y roles se sortearán en la siguiente pantalla.</p>
+      <p class="text-muted mt-sm">El facilitador registra a los participantes. Los equipos y roles se sortearán en la siguiente pantalla.</p>
     </div>
     <details class="fac-instructions" open id="setup-instructions">
       <!-- Updated dynamically by renderSetupInstructions() -->
@@ -1949,6 +1949,10 @@ label.field-label { font-size: 0.8rem; font-weight: 500; color: var(--text-secon
         <div class="ch-meta-value" id="overlay-ch-time"></div>
       </div>
       <div class="ch-meta-item">
+        <div class="ch-meta-label">Puntos</div>
+        <div class="ch-meta-value" id="overlay-ch-pts" style="color: var(--accent-gold);"></div>
+      </div>
+      <div class="ch-meta-item">
         <div class="ch-meta-label">Habilidad</div>
         <div class="ch-meta-value" id="overlay-ch-skill" style="font-size: 0.85rem;"></div>
       </div>
@@ -2180,6 +2184,7 @@ const REFLECTION_QUESTIONS = [
 let state = {
   currentScreen: 'welcome',
   mode: 'two-teams',
+  participantCount: 10,
   participants: ['','','','','','','','','',''],
   rouletteAssigned: false,
   teams: [
@@ -2190,7 +2195,7 @@ let state = {
       modelNum: '#42206',
       progress: 0,
       scores: { communication:0, organization:0, participation:0, collaboration:0, adaptation:0, decisions:0, quality:0, time:0, bonus:0, challenges:0 },
-      challengesCompleted: [],
+      challengePoints: 0, challengesCompleted: [],
       buildTurns: [0,0,0,0,0], currentBuilder: 0,
       strategy: '',
       reflection: ['','','','','',''],
@@ -2203,7 +2208,7 @@ let state = {
       modelNum: '#42207',
       progress: 0,
       scores: { communication:0, organization:0, participation:0, collaboration:0, adaptation:0, decisions:0, quality:0, time:0, bonus:0, challenges:0 },
-      challengesCompleted: [],
+      challengePoints: 0, challengesCompleted: [],
       buildTurns: [0,0,0,0,0], currentBuilder: 0,
       strategy: '',
       reflection: ['','','','','',''],
@@ -2234,7 +2239,8 @@ function getTeamCount() {
 }
 
 function getMemberCount() {
-  return state.mode === 'all-together' ? 10 : 5;
+  var total = state.participantCount || 10;
+  return state.mode === 'all-together' ? total : Math.ceil(total / 2);
 }
 
 function setMode(mode) {
@@ -2244,14 +2250,16 @@ function setMode(mode) {
 
   // Update welcome stats
   var statsEl = document.getElementById('welcome-stats');
+  var total = state.participantCount || 10;
   if (mode === 'all-together') {
     statsEl.innerHTML = '<div class="welcome-stat"><strong>1</strong>Equipo</div>' +
-      '<div class="welcome-stat"><strong>10</strong>Integrantes</div>' +
+      '<div class="welcome-stat"><strong>' + total + '</strong>Integrantes</div>' +
       '<div class="welcome-stat"><strong>1</strong>Modelo F1</div>' +
       '<div class="welcome-stat"><strong>&#9733;</strong>Retos sorpresa</div>';
   } else {
+    var perTeam = Math.ceil(total / 2);
     statsEl.innerHTML = '<div class="welcome-stat"><strong>2</strong>Equipos</div>' +
-      '<div class="welcome-stat"><strong>5</strong>Integrantes</div>' +
+      '<div class="welcome-stat"><strong>' + perTeam + '</strong>Integrantes</div>' +
       '<div class="welcome-stat"><strong>2</strong>Modelos F1</div>' +
       '<div class="welcome-stat"><strong>&#9733;</strong>Retos sorpresa</div>';
   }
@@ -2260,15 +2268,22 @@ function setMode(mode) {
 
 function renderSetup() {
   var container = document.getElementById('setup-content');
+  var count = state.participantCount || 10;
   var html = '';
 
   html += '<div style="max-width:520px; margin:0 auto 24px;">';
   html += '<div class="card setup-card">';
-  html += '<div class="fields">';
-  for (var i = 1; i <= 10; i++) {
+  html += '<div class="fields" id="participant-fields">';
+  for (var i = 1; i <= count; i++) {
     html += '<input type="text" id="p' + i + '" placeholder="Participante ' + i + '">';
   }
-  html += '</div></div></div>';
+  html += '</div>';
+  html += '<div style="display:flex; gap:10px; justify-content:center; margin-top:14px;">';
+  html += '<button class="btn btn-surface btn-sm" onclick="removeParticipant()" style="min-width:44px;"' + (count <= 2 ? ' disabled' : '') + '>&minus; Quitar</button>';
+  html += '<span style="color:var(--text-muted); font-size:0.85rem; line-height:32px;">' + count + ' participantes</span>';
+  html += '<button class="btn btn-surface btn-sm" onclick="addParticipant()" style="min-width:44px;"' + (count >= 20 ? ' disabled' : '') + '>+ Agregar</button>';
+  html += '</div>';
+  html += '</div></div>';
 
   container.innerHTML = html;
   renderSetupInstructions();
@@ -2278,16 +2293,42 @@ function renderSetup() {
   if (btn) btn.textContent = state.mode === 'all-together' ? 'SORTEAR ROLES' : 'SORTEAR EQUIPOS';
 }
 
+function addParticipant() {
+  saveParticipantInputsTemp();
+  if (state.participantCount < 20) {
+    state.participantCount++;
+    while (state.participants.length < state.participantCount) state.participants.push('');
+    renderSetup();
+  }
+}
+
+function removeParticipant() {
+  saveParticipantInputsTemp();
+  if (state.participantCount > 2) {
+    state.participantCount--;
+    renderSetup();
+  }
+}
+
+function saveParticipantInputsTemp() {
+  var count = state.participantCount || 10;
+  for (var i = 0; i < count; i++) {
+    var el = document.getElementById('p' + (i+1));
+    if (el) state.participants[i] = el.value || '';
+  }
+}
+
 function renderSetupInstructions() {
   var el = document.getElementById('setup-instructions');
   if (!el) return;
+  var count = state.participantCount || 10;
   if (state.mode === 'all-together') {
     el.innerHTML = '<summary>COMO LLENAR ESTA PANTALLA</summary>' +
       '<div class="inst-body">' +
       '<ul>' +
-      '<li>Registra los <strong>10 nombres</strong> de los participantes. El orden no importa.</li>' +
+      '<li>Registra los nombres de los participantes. Usa los botones <strong>+ Agregar</strong> o <strong>&minus; Quitar</strong> si necesitas ajustar el numero.</li>' +
       '<li>Los roles (coordinador, constructor, apoyo) y el modelo a construir se sortearán en la siguiente pantalla.</li>' +
-      '<li>Recuerda: maximo <strong>4 constructores simultaneos</strong>. Los demas apoyan y se rotan.</li>' +
+      '<li>Recuerda: máximo <strong>4 constructores simultáneos</strong>. Los demás apoyan y se rotan.</li>' +
       '</ul>' +
       '<div class="inst-tip">Cuando termines, da clic en "SORTEAR ROLES" para asignar roles al azar.</div>' +
       '</div>';
@@ -2295,9 +2336,9 @@ function renderSetupInstructions() {
     el.innerHTML = '<summary>COMO LLENAR ESTA PANTALLA</summary>' +
       '<div class="inst-body">' +
       '<ul>' +
-      '<li>Registra los <strong>10 nombres</strong> de los participantes. El orden no importa.</li>' +
+      '<li>Registra los nombres de los participantes. Usa los botones <strong>+ Agregar</strong> o <strong>&minus; Quitar</strong> si necesitas ajustar el numero.</li>' +
       '<li>Los equipos, los roles (coordinador, constructor, apoyo) y el modelo de cada equipo se sortearán en la siguiente pantalla.</li>' +
-      '<li>Recuerda: maximo <strong>4 constructores simultaneos</strong> por equipo. Los demas apoyan y se rotan.</li>' +
+      '<li>Recuerda: máximo <strong>4 constructores simultáneos</strong> por equipo. Los demás apoyan y se rotan.</li>' +
       '</ul>' +
       '<div class="inst-tip">Cuando termines, da clic en "SORTEAR EQUIPOS" para asignar equipos y roles al azar.</div>' +
       '</div>';
@@ -2344,8 +2385,9 @@ function goToScreen(id) {
 
 // ─── PARTICIPANTS ──────────────────────────────────
 function saveParticipants() {
+  var count = state.participantCount || 10;
   var arr = [];
-  for (var i = 1; i <= 10; i++) {
+  for (var i = 1; i <= count; i++) {
     var el = document.getElementById('p' + i);
     arr.push(el ? (el.value || ('Participante ' + i)) : ('Participante ' + i));
   }
@@ -2356,7 +2398,8 @@ function saveParticipants() {
 
 function restoreParticipantInputs() {
   if (!state.participants) return;
-  for (var i = 0; i < 10; i++) {
+  var count = state.participantCount || 10;
+  for (var i = 0; i < count; i++) {
     var el = document.getElementById('p' + (i+1));
     if (el && state.participants[i]) el.value = state.participants[i];
   }
@@ -2395,16 +2438,17 @@ function assignRoles(size, maxBuilders) {
 
 function shuffleTeamsAndRoles() {
   var tc = getTeamCount();
-  var mc = getMemberCount();
-  var participants = (state.participants || []).slice(0, 10);
-  while (participants.length < 10) participants.push('Participante ' + (participants.length + 1));
+  var total = state.participantCount || 10;
+  var participants = (state.participants || []).slice(0, total);
+  while (participants.length < total) participants.push('Participante ' + (participants.length + 1));
   var shuffled = shuffleArray(participants);
 
   if (tc === 2) {
-    state.teams[0].members = shuffled.slice(0, 5);
-    state.teams[1].members = shuffled.slice(5, 10);
-    state.teams[0].roles = assignRoles(5);
-    state.teams[1].roles = assignRoles(5);
+    var half = Math.ceil(total / 2);
+    state.teams[0].members = shuffled.slice(0, half);
+    state.teams[1].members = shuffled.slice(half, total);
+    state.teams[0].roles = assignRoles(state.teams[0].members.length);
+    state.teams[1].roles = assignRoles(state.teams[1].members.length);
 
     if (Math.random() < 0.5) {
       state.teams[0].model = 'Oracle Red Bull Racing RB20 F1'; state.teams[0].modelNum = '#42206';
@@ -2416,15 +2460,15 @@ function shuffleTeamsAndRoles() {
     state.teams[1].buildTurns = state.teams[1].members.map(function(){ return 0; });
     state.teams[1].currentBuilder = 0;
   } else {
-    state.teams[0].members = shuffled.slice(0, mc);
+    state.teams[0].members = shuffled.slice(0, total);
     if (Math.random() < 0.5) {
       state.teams[0].model = 'Oracle Red Bull Racing RB20 F1'; state.teams[0].modelNum = '#42206';
     } else {
       state.teams[0].model = 'Ferrari SF-24 F1'; state.teams[0].modelNum = '#42207';
     }
     var sd = MODEL_SECTIONS[state.teams[0].modelNum];
-    var sects = (mc > 5 && sd && sd.sectionsLarge) ? sd.sectionsLarge : (sd ? sd.sections : []);
-    state.teams[0].roles = assignRoles(mc, sects.length);
+    var sects = (total > 5 && sd && sd.sectionsLarge) ? sd.sectionsLarge : (sd ? sd.sections : []);
+    state.teams[0].roles = assignRoles(total, sects.length);
   }
   state.teams[0].buildTurns = state.teams[0].members.map(function(){ return 0; });
   state.teams[0].currentBuilder = 0;
@@ -2616,7 +2660,7 @@ function renderFacilitator() {
     const done = team.challengesCompleted.includes(ch.id);
     chHtml += `<div class="challenge-item${done ? ' completed' : ''}">
       <span class="ch-name">${ch.name}</span>
-      <span class="ch-pts">${ch.duration}s</span>
+      <span class="ch-pts">${ch.points} pts &middot; ${ch.duration}s</span>
       ${done
         ? '<span class="badge badge-success" style="font-size:0.6rem;">Completado</span>'
         : `<button class="btn btn-surface btn-sm" onclick="showChallenge('${ch.id}', ${t})">Activar</button>`
@@ -2676,7 +2720,7 @@ function showChallenge(challengeId, teamIdx) {
   document.getElementById('overlay-ch-title').textContent = ch.name;
   document.getElementById('overlay-ch-desc').textContent = ch.description;
   document.getElementById('overlay-ch-time').textContent = formatTime(ch.duration);
-  // points removed
+  document.getElementById('overlay-ch-pts').textContent = '+' + ch.points;
   document.getElementById('overlay-ch-skill').textContent = ch.skill;
   document.getElementById('overlay-ch-for').textContent = 'Para: ' + state.teams[teamIdx].name;
 
@@ -2705,9 +2749,8 @@ function startChallenge() {
 
   const area = document.getElementById('active-challenge-area');
   area.hidden = false;
-  document.getElementById('banner-ch-name').textContent = ch.name;
+  document.getElementById('banner-ch-name').textContent = ch.name + ' (+' + ch.points + ' pts)';
   document.getElementById('banner-ch-desc').textContent = ch.description;
-  // points removed
   document.getElementById('challenge-countdown').textContent = formatTime(ch.duration);
 
   clearInterval(challengeInterval);
@@ -2730,7 +2773,9 @@ function completeChallenge() {
   const t = state.challengeTargetTeam;
   if (!state.teams[t].challengesCompleted.includes(ch.id)) {
     state.teams[t].challengesCompleted.push(ch.id);
-    showToast(state.teams[t].name + ' completo "' + ch.name + '"', 'success');
+    if (!state.teams[t].challengePoints) state.teams[t].challengePoints = 0;
+    state.teams[t].challengePoints += ch.points;
+    showToast(state.teams[t].name + ' completo "' + ch.name + '" (+' + ch.points + ' pts)', 'success');
   }
 
   state.activeChallenge = null;
@@ -3106,6 +3151,10 @@ function renderConstruction() {
           <div class="stat-label">Retos</div>
           <div class="stat-value">${chDone}/${CHALLENGES.length}</div>
         </div>
+        <div class="team-stat">
+          <div class="stat-label">Puntos bonus</div>
+          <div class="stat-value" style="color: var(--accent-gold-light);">${team.challengePoints || 0}</div>
+        </div>
       </div>
       <div class="builder-tracker">
         ${team.members.filter(m => m).map((m, i) =>
@@ -3171,6 +3220,7 @@ function renderResults() {
       <div class="mt-md" style="font-size:0.85rem; color:var(--text-muted);">
         ${team.model}<br>
         Retos completados: ${team.challengesCompleted.length}/${CHALLENGES.length}<br>
+        Puntos bonus: <span style="color: var(--accent-gold-light); font-weight:700;">${team.challengePoints || 0} pts</span><br>
         Tiempo total: ${formatTime(state.timerElapsed)}
       </div>
     </div>`;
@@ -3185,7 +3235,8 @@ function renderResults() {
     breakdownEl.style.display = '';
     const items = [
       { label: 'Progreso', v1: state.teams[0].progress, v2: state.teams[1].progress, max: 100, unit: '%' },
-      { label: 'Retos', v1: state.teams[0].challengesCompleted.length, v2: state.teams[1].challengesCompleted.length, max: CHALLENGES.length, unit: '' }
+      { label: 'Retos', v1: state.teams[0].challengesCompleted.length, v2: state.teams[1].challengesCompleted.length, max: CHALLENGES.length, unit: '' },
+      { label: 'Puntos bonus', v1: state.teams[0].challengePoints || 0, v2: state.teams[1].challengePoints || 0, max: CHALLENGES.reduce(function(s,c){return s+c.points;},0), unit: ' pts' }
     ];
     let breakdownHtml = '';
     items.forEach(item => {
@@ -3225,11 +3276,12 @@ function doReset() {
   state = {
     currentScreen: 'welcome',
     mode: 'two-teams',
+    participantCount: 10,
     participants: ['','','','','','','','','',''],
     rouletteAssigned: false,
     teams: [
-      { name:'', members:['','','','',''], roles:[], model:'Oracle Red Bull Racing RB20 F1', modelNum:'#42206', progress:0, scores:{communication:0,organization:0,participation:0,collaboration:0,adaptation:0,decisions:0,quality:0,time:0,bonus:0,challenges:0}, challengesCompleted:[], buildTurns:[0,0,0,0,0], currentBuilder:0, strategy:'', reflection:['','','','','',''], notes:'' },
-      { name:'', members:['','','','',''], roles:[], model:'Ferrari SF-24 F1', modelNum:'#42207', progress:0, scores:{communication:0,organization:0,participation:0,collaboration:0,adaptation:0,decisions:0,quality:0,time:0,bonus:0,challenges:0}, challengesCompleted:[], buildTurns:[0,0,0,0,0], currentBuilder:0, strategy:'', reflection:['','','','','',''], notes:'' }
+      { name:'', members:['','','','',''], roles:[], model:'Oracle Red Bull Racing RB20 F1', modelNum:'#42206', progress:0, scores:{communication:0,organization:0,participation:0,collaboration:0,adaptation:0,decisions:0,quality:0,time:0,bonus:0,challenges:0}, challengePoints:0, challengesCompleted:[], buildTurns:[0,0,0,0,0], currentBuilder:0, strategy:'', reflection:['','','','','',''], notes:'' },
+      { name:'', members:['','','','',''], roles:[], model:'Ferrari SF-24 F1', modelNum:'#42207', progress:0, scores:{communication:0,organization:0,participation:0,collaboration:0,adaptation:0,decisions:0,quality:0,time:0,bonus:0,challenges:0}, challengePoints:0, challengesCompleted:[], buildTurns:[0,0,0,0,0], currentBuilder:0, strategy:'', reflection:['','','','','',''], notes:'' }
     ],
     timerElapsed:0, timerRunning:false, timerStartedAt:null,
     activeChallenge:null, challengeCountdown:0, challengeRunning:false, challengeTargetTeam:'both', facSelectedTeam:0
@@ -3241,13 +3293,7 @@ function doReset() {
     modeTwo.classList.add('selected');
     modeAll.classList.remove('selected');
   }
-  var statsEl = document.getElementById('welcome-stats');
-  if (statsEl) {
-    statsEl.innerHTML = '<div class="welcome-stat"><strong>2</strong>Equipos</div>' +
-      '<div class="welcome-stat"><strong>5</strong>Integrantes</div>' +
-      '<div class="welcome-stat"><strong>2</strong>Modelos F1</div>' +
-      '<div class="welcome-stat"><strong>&#9733;</strong>Retos sorpresa</div>';
-  }
+  setMode('two-teams');
   goToScreen('welcome');
   updateTimerDisplay();
 }
