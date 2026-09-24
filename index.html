@@ -2722,7 +2722,8 @@ function showChallenge(challengeId, teamIdx) {
   document.getElementById('overlay-ch-time').textContent = formatTime(ch.duration);
   document.getElementById('overlay-ch-pts').textContent = '+' + ch.points;
   document.getElementById('overlay-ch-skill').textContent = ch.skill;
-  document.getElementById('overlay-ch-for').textContent = 'Para: ' + state.teams[teamIdx].name;
+  var teamName = state.teams[teamIdx].name || (getTeamCount() === 1 ? 'Equipo' : ('Equipo ' + (teamIdx + 1)));
+  document.getElementById('overlay-ch-for').textContent = 'Para: ' + teamName;
 
   document.getElementById('challenge-overlay').classList.add('visible');
 }
